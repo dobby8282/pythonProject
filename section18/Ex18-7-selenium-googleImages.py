@@ -64,16 +64,10 @@ def download_images(keyword, num_images=10, output_dir='images'):
             # 이미지 요소 대기 및 선택
             image = WebDriverWait(driver, 10).until(
                 EC.presence_of_element_located(
-                    # .r48jcc.pT0Scc.iPVvYb
+                    # r48jcc pT0Scc iPVvYb
                     (By.CSS_SELECTOR, ".r48jcc.pT0Scc.iPVvYb")
                 )
             )
-
-            # image = WebDriverWait(driver, 10).until(
-            #     EC.presence_of_element_located(
-            #         (By.CSS_SELECTOR, ".r48jcc.pTOScc.iPVvYb")
-            #     )
-            # )
 
             # 이미지 URL 가져오기
             image_url = image.get_attribute('src')
@@ -95,7 +89,7 @@ def download_images(keyword, num_images=10, output_dir='images'):
     driver.quit()
 
 # 실행 코드
-keyword = "cute cat"
+keyword = "르세라핌"
 num_images = 10
 output_dir = "images"
 
