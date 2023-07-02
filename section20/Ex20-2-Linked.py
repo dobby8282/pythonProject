@@ -15,20 +15,36 @@ class LinkedList:
         self.head = None
 
     def add_node(self, data):
-        new_node = Node(data)
+        new_node = Node(data)   # 새로운 노드 생성
 
         if self.head is None:
             self.head = new_node
             return
+
         current = self.head
+
         while current.next is not None:
             current = current.next
 
         current.next = new_node
 
+
     def insert_node(self, find_data, insert_data):
         if self.head is None:
             return
+
+        '''
+        노드순서: 
+        7 
+        3 , 99의 주소값
+        99, 9의 주소값
+        9
+        1
+        6
+        find_data = 9
+        insert_data = 99
+        
+        '''
 
         if self.head.data == find_data:
             self.head = Node(insert_data, self.head)
