@@ -21,7 +21,7 @@ class BinaryTree:
         self.root = TreeNode(root) # 루트노드
 
 
-    #전위순회 left -> root -> right
+    #전위순회 root-> left -> right
     def preorder_traversal(self, start, traversal):
         if start:
             traversal += (str(start.value) + '#')
@@ -31,7 +31,7 @@ class BinaryTree:
             traversal = self.preorder_traversal(start.right, traversal)
         return traversal
 
-    # 중위순회
+    # 중위순회 left -> root -> right
     def inorder_traversal(self, start, traversal):
         if start:
             traversal = self.inorder_traversal(start.left, traversal)
@@ -39,7 +39,7 @@ class BinaryTree:
             traversal = self.inorder_traversal(start.right, traversal)
         return traversal
 
-    # 후위순회
+    # 후위순회 left -> right -> root
     def postorder_traversal(self, start, traversal):
         if start:
             traversal = self.postorder_traversal(start.left, traversal)
