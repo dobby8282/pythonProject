@@ -22,6 +22,42 @@ class BinaryTree:
 
 
     #전위순회 root-> left -> right
+    '''
+    preorder_traversal(bt.root, "")
+    
+    preorder_traversal((5), "") -> traversal = "5#"
+        (5) 1번 -> "5#3#2#4#" 
+            preorder_traversal((3), "5#") -> traversal = "5#3#"
+                (3) 1번  -> "5#3#2#"
+                     preorder_traversal((2), "5#3#") -> traversal = "5#3#2#"
+                     (2) 1번
+                        preorder_traversal(None, "5#3#2#") -> traversal = "5#3#2#"
+                     (2) 2번
+                        preorder_traversal(None, "5#3#2#") -> traversal = "5#3#2#"
+                (3) 2번  -> "5#3#2#4#" 
+                     preorder_traversal((4), "5#3#2#") -> traversal = "5#3#2#4#"
+                     (4) 1번
+                        preorder_traversal(None, "5#3#2#4#") -> traversal = "5#3#2#4#"
+                     (4) 2번
+                        preorder_traversal(None, "5#3#2#4#") -> traversal = "5#3#2#4#"
+                    
+        (5) 2번 -> "5#3#2#4#7#6#8"
+            preorder_traversal((7), "5#3#2#4#") -> traversal = "5#3#2#4#7#"
+            (7) 1번  -> "5#3#2#4#7#6#"
+                preorder_traversal((6), "5#3#2#4#7#") -> traversal = "5#3#2#4#7#6#"
+                (6) 1번
+                    preorder_traversal(None, "5#3#2#4#7#6#") -> traversal = "5#3#2#4#7#6#"
+                (6) 2번
+                    preorder_traversal(None, "5#3#2#4#7#6#") -> traversal = "5#3#2#4#7#6#"
+            (7) 2번 -> "5#3#2#4#7#6#8"
+                preorder_traversal((8), "5#3#2#4#7#6#") -> traversal = "5#3#2#4#7#6#8"
+                (8) 1번
+                    preorder_traversal(None, "5#3#2#4#7#6#8#") -> traversal = "5#3#2#4#7#6#8"
+                (8) 2번
+                    preorder_traversal(None, "5#3#2#4#7#6#8#") -> traversal = "5#3#2#4#7#6#8"
+
+    전위 순회:  5#3#2#4#7#6#8#
+    '''
     def preorder_traversal(self, start, traversal):
         if start:
             traversal += (str(start.value) + '#')
@@ -32,6 +68,49 @@ class BinaryTree:
         return traversal
 
     # 중위순회 left -> root -> right
+    '''
+    bt.inorder_traversal(bt.root, "")
+    
+    inorder_traversal((5), "")
+    (5) 1번 -> 2#3#4#
+        inorder_traversal((3), "")
+        (3) 1번 -> "2#"
+            inorder_traversal((2), "")
+                (2) 1번
+                    inorder_traversal(None, "") -> traversal = ""
+                traversal += (str(start.value)+ '#') -> traversal = "2#"
+                (2) 2번
+                    inorder_traversal(None, "2#") -> traversal = "2#"
+         traversal += (str(start.value)+ '#') -> traversal = "2#3#" 
+        (3) 2번 -> 2#3#4#
+            inorder_traversal((4), "2#3#")
+            (4) 1번
+                inorder_traversal(None, "2#3#") -> traversal = "2#3#"
+            traversal += (str(start.value)+ '#') -> traversal = "2#3#4#"  
+            (4) 2번
+                inorder_traversal(None, "2#3#4#") -> traversal = "2#3#4#"
+            
+    traversal += (str(start.value)+ '#') -> traversal = "2#3#4#5#"     
+   
+    (5) 2번 -> "2#3#4#5#6#7#8#"
+        inorder_traversal((7), "2#3#4#5#")
+        (7) 1번 -> 2#3#4#5#6#
+            inorder_traversal((6), "2#3#4#5#")
+            (6) 1번
+                inorder_traversal(None, "2#3#4#5#")
+            traversal += (str(start.value)+ '#') -> traversal = "2#3#4#5#6#"
+            (6) 2번
+                inorder_traversal(None, "2#3#4#5#6%") -> traversal = "2#3#4#5#6#"
+            
+        traversal += (str(start.value)+ '#') -> traversal = "2#3#4#5#6#7#"
+        (7) 2번 -> "2#3#4#5#6#7#8#"
+            inorder_traversal((8), "2#3#4#5#6#7#")
+            (8) 1번
+                inorder_traversal(None, "2#3#4#5#6#7#")
+            traversal += (str(start.value)+ '#') -> traversal = "2#3#4#5#6#7#8#"
+            (8) 2번
+                inorder_traversal(None, "2#3#4#5#6#7#8#")  -> traversal = "2#3#4#5#6#7#8#"
+    '''
     def inorder_traversal(self, start, traversal):
         if start:
             traversal = self.inorder_traversal(start.left, traversal)
