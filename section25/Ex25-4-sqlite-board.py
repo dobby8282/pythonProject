@@ -74,10 +74,6 @@ class BoardApp(tk.Tk):
         for row in rows:
             self.treeview_boardlist.insert('', 'end', text='', values=row)
 
-        
-
-
-
     def get_boardlist(self, keyword='', search_option=''):
         conn = sqlite3.connect('py_board.db')
         curs = conn.cursor()
@@ -102,6 +98,25 @@ class BoardApp(tk.Tk):
         conn.close()
 
         return rows
+
+    def get_board(self, board_id):
+        conn = sqlite3.connect('py_board.db')
+        curs = conn.cursor()
+
+
+        # SQL 문 작성
+        sql = f"SELECT BOARD_ID, BOARD_TITLE, BOARD_WRITER, BOARD_CONTENT, BOARD_DATE " \
+              f"FROM PY_BOARD " \
+              f"WHERE BOARD_ID =:1"
+
+        curs.execute(sql, (board_id,))
+        row = curs.fetchone()
+
+        # 데이터베이스 연결 해제
+        curs.close()
+        conn.close()
+
+        return row
 
 
         
@@ -140,6 +155,47 @@ class BoardApp(tk.Tk):
     
     def onclick_view(self, event):
         print('상세보기')
+
+        selection = self.treeview_boardlist.selection()
+        if not selection:
+            return
+        board_id = self.treeview_boardlist.item(selection, 'values')[0]
+
+        row = self.get_board(board_id)
+        print(row)
+        view_dialog = BoardViewDialog(self, row)
+        self.wait_window(view_dialog)
+
+
+        
+
+class BoardViewDialog(tk.Toplevel):
+    def __init__(self, parent, row):
+        super().__init__(parent)
+        self.title('게시글 보기')
+
+        # 컨트롤 변수 선언
+        self.label_title = tk.Label(self, text=row[1], font=('Arial', 14, 'bold'))
+        self.label_writer = tk.Label(self, text=row[2], font=('Arial', 12))
+        self.textarea_content = scrolledtext.ScrolledText(self)
+        self.button_close = tk.Button(self, text='닫기', command=self.destroy)
+
+        # 컨트롤 배치
+        self.label_title.pack(side=tk.TOP, padx=5, pady=5)
+        self.label_writer.pack(side=tk.TOP, padx=5, pady=5)
+        self.textarea_content.pack(side=tk.TOP, padx=5, pady=5, fill=tk.BOTH, expand=True)
+        self.button_close.pack(side=tk.RIGHT, padx=5, pady=5)
+        
+        # 게시글 내용 출력
+        self.textarea_content.insert(tk.END, row[3])
+
+        self.geometry('+%d+%d' % (parent.winfo_rootx() + parent.winfo_width() / 2 - self.winfo_width() / 2,
+                                  parent.winfo_rooty() + parent.winfo_height() / 2 - self.winfo_height() / 2
+                                  ))
+
+
+
+
 
         
         
