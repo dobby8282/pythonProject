@@ -1,6 +1,8 @@
 '''
 파일명: Ex25-4-sqlite-board.py
 
+https://sqlitebrowser.org/
+
 테스트 SQL
 INSERT INTO PY_BOARD (BOARD_TITLE, BOARD_WRITER, BOARD_CONTENT) VALUES ('TEST', 'dev', '데이터 검색 테스트 중입니다.');
 
@@ -48,15 +50,81 @@ class BoardApp(tk.Tk):
         self.treeview_boardlist.heading('writer', text='작성자')
         self.treeview_boardlist.column('writer', width=100)
         self.treeview_boardlist.heading('date', text='작성일')
-        self.treeview_boardlist.column('date', width=50)
+        self.treeview_boardlist.column('date', width=150)
         
         # 검색 기준 설정
         self.combobox_search['values'] = ('제목', '작성자')
         self.combobox_search.current(0)
 
+        self.init_boardlist()
+        print('초기화 완료!')
+
+    # 게시판 초기화
+    def init_boardlist(self):
+        print('게시판 초기화')
+        
+        # py_board 데이터 불러오기
+        rows = self.get_boardlist()
+        
+        # 트리뷰 초기화
+        self.treeview_boardlist.delete(*self.treeview_boardlist.get_children())
+        self.treeview_boardlist.bind('<Double-Button-1>', self.onclick_view)
+        
+        # 게시글 목록 출력
+        for row in rows:
+            self.treeview_boardlist.insert('', 'end', text='', values=row)
+
+        
+
+
+
+    def get_boardlist(self, keyword='', search_option=''):
+        conn = sqlite3.connect('py_board.db')
+        curs = conn.cursor()
+        
+        # 검색 조건에 따른 WHERE 절 구성
+        if search_option == '작성자' and keyword != '':
+            where_clause = "WHERE BOARD_WRITER = :1"
+        else:
+            where_clause = "WHERE BOARD_TITLE LIKE '%' || :1 || '%'"
+
+        # SQL 문 작성
+        sql = f"SELECT BOARD_ID, BOARD_TITLE, BOARD_WRITER, BOARD_DATE " \
+              f"FROM PY_BOARD " \
+              f"{where_clause} ORDER BY BOARD_ID DESC"
+
+        curs.execute(sql, (keyword,))
+
+        rows = curs.fetchall()
+
+        # 데이터베이스 연결 해제
+        curs.close()
+        conn.close()
+
+        return rows
+
+
+        
+
     # 검색버튼 클릭
     def onclick_search(self):
-        print('검색!')
+
+        keyword = self.textfield_search.get()
+
+        search_option = self.combobox_search.get()
+
+        # py_board 데이터 불러오기
+        rows = self.get_boardlist(keyword, search_option)
+
+        # 트리뷰 초기화
+        self.treeview_boardlist.delete(*self.treeview_boardlist.get_children())
+        self.treeview_boardlist.bind('<Double-Button-1>', self.onclick_view)
+
+        # 게시글 목록 출력
+        for row in rows:
+            self.treeview_boardlist.insert('', 'end', text='', values=row)
+
+
 
     # 신규버튼 클릭
     def onclick_insert(self):
@@ -69,6 +137,9 @@ class BoardApp(tk.Tk):
     # 삭제버튼 클릭
     def onclick_delete(self):
         print('삭제')
+    
+    def onclick_view(self, event):
+        print('상세보기')
 
         
         
