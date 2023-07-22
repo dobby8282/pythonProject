@@ -6,6 +6,11 @@ https://sqlitebrowser.org/
 테스트 SQL
 INSERT INTO PY_BOARD (BOARD_TITLE, BOARD_WRITER, BOARD_CONTENT) VALUES ('TEST', 'dev', '데이터 검색 테스트 중입니다.');
 
+Python 실행파일 만들기
+pip install pyinstaller
+
+pyinstaller ./section25/Ex25-4-sqlite-board.py -w -F
+
 
 '''
 import tkinter as tk
@@ -144,6 +149,10 @@ class BoardApp(tk.Tk):
     # 신규버튼 클릭
     def onclick_insert(self):
         print('신규')
+        # 글쓰기 새창 열기
+        insert_dialog = BoardInsertDialog(self)
+        self.wait_window(insert_dialog)
+
         
     # 수정버튼 클릭
     def onclick_update(self):
@@ -195,11 +204,59 @@ class BoardViewDialog(tk.Toplevel):
 
 
 
+class BoardInsertDialog(tk.Toplevel):
+    def __init__(self, parent):
+        super().__init__(parent)
+        self.title('새 글 쓰기')
+
+        # 컨트롤 변수 선언
+        self.textfield_title = tk.Entry(self)
+        self.textfield_writer = tk.Entry(self)
+        self.textarea_content = scrolledtext.ScrolledText(self)
+        self.button_save = tk.Button(self, text='저장', command=self.onclick_save)
+        self.button_cancel = tk.Button(self, text='취소', command=self.destroy)
+
+        # 컨트롤 배치
+        tk.Label(self, text='제목').pack(side=tk.TOP, padx=5, pady=5)
+        self.textfield_title.pack(side=tk.TOP, padx=5, pady=5, fill=tk.X)
+        tk.Label(self, text='작성자').pack(side=tk.TOP, padx=5, pady=5)
+        self.textfield_writer.pack(side=tk.TOP, padx=5, pady=5, fill=tk.X)
+        tk.Label(self, text='내용').pack(side=tk.TOP, padx=5, pady=5)
+        self.textarea_content.pack(side=tk.TOP, padx=5, pady=5, fill=tk.BOTH, expand=True)
+        self.button_save.pack(side=tk.LEFT, padx=5, pady=5)
+        self.button_cancel.pack(side=tk.RIGHT, padx=5, pady=5)
+
+        self.geometry('+%d+%d' % (parent.winfo_rootx() + parent.winfo_width() / 2 - self.winfo_width() / 2,
+                                  parent.winfo_rooty() + parent.winfo_height() / 2 - self.winfo_height() / 2
+                                  ))
+    
+    def onclick_save(self):
+        print('신규 저장')
+        title = self.textfield_title.get()
+        writer = self.textfield_writer.get()
+        content = self.textarea_content.get('1.0', tk.END)
+
+        # 데이터베이스 연결
+        conn = sqlite3.connect('py_board.db')
+        curs = conn.cursor()
+        
+        #SQL 실행문
+        sql = 'INSERT INTO PY_BOARD (BOARD_TITLE, BOARD_WRITER, BOARD_CONTENT) ' \
+              'VALUES (:1, :2, :3)'
+        curs.execute(sql, (title, writer, content))
+        conn.commit()
+        
+        # 데이터베이스 연결해제
+        curs.close()
+        conn.close()
+
+        # 다이어로그 닫기
+        self.destroy()
+
+        # 게시글 목록 초기화
+        self.master.init_boardlist()
 
 
-        
-        
-        
 
 
 # 실행코드
