@@ -1,58 +1,44 @@
 '''
 파일명: Ex02-7-set.py
-내용: 세트(Set) 자료형 학습
-
-세트란?
-   - 순서가 없는 자료형
-   - 중복된 값을 가질 수 없음
-   - 중괄호 {} 로 감싸서 표현
+세트(Set):
+   - 중복을 허용하지 않는 자료구조
+   - 순서가 없음 (인덱싱 불가)
+   - 집합 연산 가능
 '''
 
-# 1. 세트 만들기
-pokemons = {"피카츄", "라이츄", "파이리"}
-print('포켓몬 세트:', pokemons)   # 실행할 때마다 순서가 변경될 수 있음
+# 1. 세트 생성과 기본 기능
+pokemon_types = {'불꽃', '물', '풀', '전기'}
+print('포켓몬 속성:', pokemon_types)
 
-# 2. 세트 반복하기
-print('## 세트 항목 반복 ##')
-for pokemon in pokemons:
-   print(pokemon)
+# 포함 여부 확인
+print('불꽃 타입 있나요?:', '불꽃' in pokemon_types)
+print('얼음 타입 있나요?:', '얼음' in pokemon_types)
 
-# 3. 값 존재 여부 확인하기
-pokemons = {"피카츄", "잠만보", "야도란"}
-print('피카츄가 있나요?', "피카츄" in pokemons)  # True
-print('꼬부기가 있나요?', "꼬부기" in pokemons)  # False
+# 2. 세트 수정
+fire_types = {'파이리', '마그마', '브케인'}
+print('초기 불꽃타입:', fire_types)
 
-# 4. 세트 수정하기
-## 4-1. 항목 추가
-pokemons = {"피카츄", "라이츄", "파이리"}
-print('추가 전:', pokemons)
-pokemons.add("꼬부기")
-print('추가 후:', pokemons)
+# 단일 추가
+fire_types.add('리자몽')
+print('메가진화 추가:', fire_types)
 
-## 4-2. 다른 세트 추가
-set1 = {"피카츄", "라이츄"}
-set2 = {"파이리", "꼬부기"}
-set1.update(set2)
-print('세트 합치기 결과:', set1)
+# 여러 항목 추가
+new_fire = {'마그케인', '볼케니온'}
+fire_types.update(new_fire)
+print('새 포켓몬 추가:', fire_types)
 
-# 5. 세트 항목 제거하기
-pokemons = {"피카츄", "라이츄", "파이리"}
-print('제거 전:', pokemons)
+# 3. 세트 제거 메서드 비교
+water_types = {'꼬부기', '잉어킹', '라프라스'}
+print('물타입들:', water_types)
 
-## 5-1. remove() - 없는 항목 제거시 에러 발생
-pokemons.remove("피카츄")
-print('remove() 후:', pokemons)
-# pokemons.remove("피카츄")  # 에러 발생!
+water_types.remove('잉어킹')      # 없으면 에러
+print('remove 후:', water_types)
 
-## 5-2. discard() - 없는 항목 제거시 에러 발생 안 함
-pokemons.discard("라이츄")
-print('discard() 후:', pokemons)
-pokemons.discard("없는포켓몬")  # 에러 발생 안 함
+water_types.discard('없는포켓몬')  # 에러 없음
+print('discard 후:', water_types)
 
-## 5-3. 임의의 항목 제거
-pokemons.pop()
-print('pop() 후:', pokemons)
+removed = water_types.pop()      # 임의 제거
+print(f'방출된 포켓몬: {removed}')
 
-## 5-4. 모든 항목 제거
-pokemons.clear()
-print('clear() 후:', pokemons)
+water_types.clear()              # 전체 제거
+print('리셋 후:', water_types)

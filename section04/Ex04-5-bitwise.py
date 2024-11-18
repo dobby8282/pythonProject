@@ -1,92 +1,63 @@
 '''
 파일명: Ex04-5-bitwise.py
-내용: 비트 연산자(Bitwise Operators)
+내용: 비트 연산자와 활용
 
-비트 연산자란?
-   - 값을 2진수(비트)로 변환한 후 비트 단위로 연산을 수행
-   - 하드웨어 제어, 암호화, 최적화 등에 활용
-
-비트 연산자 종류
-   & (AND)  : 두 비트 모두 1일 때만 1
-   | (OR)   : 두 비트 중 하나라도 1이면 1
-   ^ (XOR)  : 두 비트가 서로 다르면 1
-   ~ (NOT)  : 비트 반전 (1→0, 0→1)
-   << (Left Shift)  : 비트를 왼쪽으로 N칸 이동
-   >> (Right Shift) : 비트를 오른쪽으로 N칸 이동
+비트 연산자:
+   & (AND)  : 두 비트 모두 1일 때 1
+   | (OR)   : 하나라도 1이면 1
+   ^ (XOR)  : 두 비트가 다르면 1
+   ~ (NOT)  : 비트 반전
+   << (Left Shift)  : N칸 왼쪽 이동
+   >> (Right Shift) : N칸 오른쪽 이동
 '''
 
-# 1. 기본 비트 연산
-print('===== 기본 비트 연산 =====')
-a = 6  # 0110
-b = 5  # 0101
+# 1. 게임 캐릭터 상태 비트 마스킹
+POISONED    = 0b0001  # 1
+FROZEN      = 0b0010  # 2
+BURNED      = 0b0100  # 4
+PARALYZED   = 0b1000  # 8
 
-print('a = {} (이진수: {:04b})'.format(a, a))
-print('b = {} (이진수: {:04b})'.format(b, b))
-print('a & b = {} (이진수: {:04b})'.format(a & b, a & b))   # AND
-print('a | b = {} (이진수: {:04b})'.format(a | b, a | b))   # OR
-print('a ^ b = {} (이진수: {:04b})'.format(a ^ b, a ^ b))   # XOR
-print('~a = {} (이진수: {:b})'.format(~a, ~a & 0xF))        # NOT
-print('a << 1 = {} (이진수: {:04b})'.format(a << 1, a << 1))  # Left Shift
-print('a >> 1 = {} (이진수: {:04b})'.format(a >> 1, a >> 1))  # Right Shift
+# 상태이상 부여/해제
+status = 0b0000
+print(f'초기 상태: {bin(status)}')
 
-# 2. 비트 연산 진리표
-print('\n===== 비트 연산 진리표 =====')
-print('  A  B  AND OR  XOR')
-print('  0  0   0   0   0')
-print('  0  1   0   1   1')
-print('  1  0   0   1   1')
-print('  1  1   1   1   0')
+# 독과 화상 부여
+status = status | POISONED | BURNED
+print(f'독+화상 부여: {bin(status)}')
 
-# 3. 실용적인 비트 연산 예제
-print('\n===== 비트 연산 활용 =====')
-# 2의 거듭제곱 계산
-num = 1
-print('1 << 0 = {} (2^0)'.format(num << 0))  # 1
-print('1 << 1 = {} (2^1)'.format(num << 1))  # 2
-print('1 << 2 = {} (2^2)'.format(num << 2))  # 4
-print('1 << 3 = {} (2^3)'.format(num << 3))  # 8
+# 해독 처치 (독 해제)
+status = status & ~POISONED
+print(f'독 해제: {bin(status)}')
 
-# 비트 마스킹
-ADMIN = 8     # 1000
-WRITE = 4     # 0100
-READ = 2      # 0010
-EXEC = 1      # 0001
+# 2. 아이템 조합 시스템
+WATER = 0b001   # 1
+FIRE  = 0b010   # 2
+EARTH = 0b100   # 4
 
-permission = READ | WRITE  # 읽기와 쓰기 권한 부여
-print('\n권한 확인:')
-print('읽기 권한: {}'.format(bool(permission & READ)))    # True
-print('쓰기 권한: {}'.format(bool(permission & WRITE)))   # True
-print('실행 권한: {}'.format(bool(permission & EXEC)))    # False
-print('관리 권한: {}'.format(bool(permission & ADMIN)))   # False
+# 아이템 조합 결과
+steam = WATER | FIRE         # 물 + 불 = 증기
+lava = FIRE | EARTH         # 불 + 땅 = 용암
+print(f'\n증기 = {bin(steam)}')
+print(f'용암 = {bin(lava)}')
 
-'''
-실행 결과:
-===== 기본 비트 연산 =====
-a = 6 (이진수: 0110)
-b = 5 (이진수: 0101)
-a & b = 4 (이진수: 0100)
-a | b = 7 (이진수: 0111)
-a ^ b = 3 (이진수: 0011)
-~a = -7 (이진수: 1001)
-a << 1 = 12 (이진수: 1100)
-a >> 1 = 3 (이진수: 0011)
+# 3. 플레이어 권한 시스템
+READ  = 0b0001    # 읽기
+WRITE = 0b0010    # 쓰기
+EDIT  = 0b0100    # 수정
+ADMIN = 0b1000    # 관리자
 
-===== 비트 연산 진리표 =====
- A  B  AND OR  XOR
- 0  0   0   0   0
- 0  1   0   1   1
- 1  0   0   1   1
- 1  1   1   1   0
+# 일반 유저 권한
+user_permission = READ | WRITE
+print(f'\n일반유저 권한: {bin(user_permission)}')
+print(f'읽기 가능?: {bool(user_permission & READ)}')
+print(f'관리자 권한?: {bool(user_permission & ADMIN)}')
 
-===== 비트 연산 활용 =====
-1 << 0 = 1 (2^0)
-1 << 1 = 2 (2^1)
-1 << 2 = 4 (2^2)
-1 << 3 = 8 (2^3)
+# 관리자 권한
+admin_permission = READ | WRITE | EDIT | ADMIN
+print(f'관리자 권한: {bin(admin_permission)}')
 
-권한 확인:
-읽기 권한: True
-쓰기 권한: True
-실행 권한: False
-관리 권한: False
-'''
+# 4. 2의 거듭제곱 계산
+power = 1
+for i in range(4):
+   result = power << i
+   print(f'2^{i} = {result} ({bin(result)})')

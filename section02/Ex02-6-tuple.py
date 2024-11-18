@@ -1,46 +1,41 @@
 '''
 파일명: Ex02-6-tuple.py
-내용: 튜플의 기본 사용법 학습
-
-튜플(Tuple)이란?
-   - 리스트와 비슷하지만 값을 변경할 수 없음
-   - 소괄호 () 로 감싸서 표현
-   - 순서가 있는 자료형
+튜플(Tuple):
+   - 수정 불가능한 순서가 있는 자료구조
+   - 소괄호 () 사용
+   - 읽기 전용 리스트와 유사
 '''
 
-# 1. 튜플 만들기
-pokemons = ('피카츄', '라이츄', '파이리')
-print('포켓몬 튜플:', pokemons)
-print('튜플 길이:', len(pokemons))
+# 1. 튜플 생성과 기본 조작
+game_starters = ('파이리', '이상해씨', '꼬부기')
+print('스타터 포켓몬:', game_starters)
+print('첫 번째 스타터:', game_starters[0])
+print('마지막 스타터:', game_starters[-1])
+print('전체 스타터 수:', len(game_starters))
 
-# 2. 튜플 데이터 접근하기
-print('두번째 포켓몬:', pokemons[1])      # 인덱스로 접근
-print('마지막 포켓몬:', pokemons[-1])     # 뒤에서부터 접근
-print('일부 추출:', pokemons[1:3])       # 슬라이싱
+# 2. 튜플 슬라이싱
+legendary_birds = ('프리져', '썬더', '파이어', '루기아')
+print('전설의 새:', legendary_birds[1:3])    # 썬더, 파이어
 
-# 3. 튜플의 값 변경하기 (튜플→리스트→튜플)
-pokemons = ('피카츄', '라이츄', '파이리')
-print('변경 전:', pokemons)
+# 3. 튜플 수정 (변환 활용)
+evolve_chain = ('치코리타', '베이리프', '메가니움')
+print('진화 전:', evolve_chain)
 
-# 리스트로 변환하여 값 변경
-pokemon_list = list(pokemons)    # 튜플→리스트
-pokemon_list[1] = '잠만보'       # 값 변경
-pokemons = tuple(pokemon_list)   # 리스트→튜플
+# 임시로 리스트 변환하여 수정
+temp_list = list(evolve_chain)
+temp_list[1] = '메가베이리프'
+evolve_chain = tuple(temp_list)
+print('진화 후:', evolve_chain)
 
-print('변경 후:', pokemons)
+# 4. 튜플 언패킹
+gym_leaders = ('웅', '아야', '하야토', '마니')
+(leader1, leader2, leader3, leader4) = gym_leaders
+print('체육관 관장:')
+print(f'1번 관장: {leader1}')
+print(f'2번 관장: {leader2}')
 
-# 4. 튜플 압축풀기(각 변수에 값 넣기)
-pokemons = ('피카츄', '라이츄', '파이리', '꼬부기')
-(p1, p2, p3, p4) = pokemons     # 각 변수에 튜플 값 저장
-
-print('## 압축풀기 결과 ##')
-print('첫번째 포켓몬:', p1)
-print('두번째 포켓몬:', p2)
-print('세번째 포켓몬:', p3)
-print('네번째 포켓몬:', p4)
-
-# 5. 튜플 합치기
-tuple1 = ('피카츄', '라이츄')
-tuple2 = ('파이리', '꼬부기')
-new_tuple = tuple1 + tuple2
-print('합쳐진 튜플:', new_tuple)
+# 5. 튜플 결합
+kanto = ('이상해씨', '파이리')
+johto = ('치코리타', '브케인')
+starters = kanto + johto
+print('전체 스타터:', starters)

@@ -1,61 +1,53 @@
 '''
 파일명: Ex03-4-input.py
-내용: 사용자 입력 받기 - input() 함수 활용
-
-input() 함수
-    - 사용자로부터 데이터를 입력받는 함수
-    - 입력받은 모든 데이터는 문자열(str) 형태로 저장
-    - 형변환이 필요한 경우 int(), float() 등을 활용
+input() 함수:
+   - 사용자 입력을 받는 함수
+   - 모든 입력은 문자열(str)로 저장
+   - 숫자 활용 시 int(), float() 등으로 형변환 필요
 '''
 
-# 1. 기본 입력 받기
-print('===== 기본 입력 받기 =====')
-name = input('이름을 입력하세요 >>> ')
-age = input('나이를 입력하세요 >>> ')
+# 1. 기본 입력
+trainer_name = input('트레이너 이름: ')
+trainer_age = int(input('나이: '))
+print(f'이름: {trainer_name}, 나이: {trainer_age}세')
 
-print('입력된 이름은 {}입니다.'.format(name))
-print('입력된 나이는 {}입니다.'.format(age))
+# 2. 포켓몬 능력치 입력
+pokemon = input('포켓몬 이름: ')
+level = int(input('레벨: '))
+hp = float(input('체력: '))
+print(f'{pokemon} (Lv.{level}) HP: {hp:.1f}')
 
-# 2. 형변환을 통한 숫자 입력
-print('\n===== 형변환 입력 받기 =====')
-height = float(input('키(cm)를 입력하세요 >>> '))
-weight = float(input('몸무게(kg)를 입력하세요 >>> '))
-print('키: {:.1f}cm'.format(height))
-print('몸무게: {:.1f}kg'.format(weight))
+# 3. 데미지 계산기
+attack = int(input('공격력: '))
+defense = int(input('방어력: '))
+damage = attack - defense
 
-# 3. 응용: 간단한 계산기
-print('\n===== 계산기 =====')
-num1 = int(input('첫 번째 숫자를 입력하세요 >>> '))
-num2 = int(input('두 번째 숫자를 입력하세요 >>> '))
-print('덧셈 결과: {}'.format(num1 + num2))
-print('뺄셈 결과: {}'.format(num1 - num2))
-print('곱셈 결과: {}'.format(num1 * num2))
-print('나눗셈 결과: {:.2f}'.format(num1 / num2))
+print('\n===== 전투 결과 =====')
+print(f'공격력: {attack}')
+print(f'방어력: {defense}')
+print(f'데미지: {damage}')
 
 '''
 실행 예시:
-===== 기본 입력 받기 =====
-이름을 입력하세요 >>> 홍길동
-나이를 입력하세요 >>> 25
-입력된 이름은 홍길동입니다.
-입력된 나이는 25입니다.
+트레이너 이름: 지우
+나이: 10
+이름: 지우, 나이: 10세
 
-===== 형변환 입력 받기 =====
-키(cm)를 입력하세요 >>> 175.5
-몸무게(kg)를 입력하세요 >>> 68.3
-키: 175.5cm
-몸무게: 68.3kg
+포켓몬 이름: 피카츄
+레벨: 25
+체력: 35.5
+피카츄 (Lv.25) HP: 35.5
 
-===== 계산기 =====
-첫 번째 숫자를 입력하세요 >>> 10
-두 번째 숫자를 입력하세요 >>> 3
-덧셈 결과: 13
-뺄셈 결과: 7
-곱셈 결과: 30
-나눗셈 결과: 3.33
+공격력: 55
+방어력: 30
+
+===== 전투 결과 =====
+공격력: 55
+방어력: 30
+데미지: 25
 '''
 
 # 주의사항
-# 1. 문자열로 입력받은 값을 연산에 사용할 경우 반드시 형변환 필요
-# 2. 형변환 시 잘못된 값이 입력되면 ValueError 발생
-# 3. 나눗셈 시 0으로 나누면 ZeroDivisionError 발생
+# 1. 숫자 입력 시 반드시 형변환
+# 2. 잘못된 입력 → ValueError
+# 3. 0으로 나누기 → ZeroDivisionError

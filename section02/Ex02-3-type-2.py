@@ -20,14 +20,3 @@ print('튜플:', pokemons_tuple)
 print('딕셔너리:', pokemon_dict)
 print('세트:', pokemons_set)
 
-# 2. 형변환 예제
-name = '피카츄'
-age = 27
-# 문자 + 숫자 (형변환 필요)
-result = name + str(age)
-print('형변환 결과:', result)
-
-# 3. 문자열 연결하기
-text1 = 'Hello'
-text2 = 'Python'
-print('문자열 연결:', text1 + ' ' + text2)

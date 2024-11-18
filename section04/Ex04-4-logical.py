@@ -1,112 +1,54 @@
 '''
 파일명: Ex04-4-logical.py
-내용: 논리 연산자(Logical Operators)
+내용: 논리 연산자와 활용
 
-논리 연산자란?
-   - 관계 연산자와 함께 사용되는 연산자
-   - 2개 이상의 조건을 논리적으로 연결할 때 사용
-   - 결과값으로 True 또는 False를 반환
-
-논리 연산자 종류
-   and : 두 조건 모두 True일 때만 True
-   or  : 두 조건 중 하나라도 True이면 True
-   not : 논리값을 반전 (True → False, False → True)
-
-진리표 (Truth Table)
-   and 연산자             or 연산자
-   A   B   결과         A   B   결과
-   F   F   F           F   F   F
-   F   T   F           F   T   T
-   T   F   F           T   F   T
-   T   T   T           T   T   T
+논리 연산자:
+   and : 둘 다 True일 때만 True
+   or  : 하나라도 True이면 True
+   not : True ⟷ False 반전
 '''
 
-# 1. 기본 논리 연산자
-print('===== 기본 논리 연산자 =====')
-a = 10
-b = 0
+# 1. 게임 캐릭터 상태 체크
+level = 30
+hp = 100
+mp = 80
 
-# and 연산자
-print('{} > 0 and {} > 0 : {}'.format(a, b, a > 0 and b > 0))   # False
-print('{} > 0 and {} >= 0 : {}'.format(a, b, a > 0 and b >= 0)) # True
+# 풀피, 풀엠일 때 버프 발동
+is_full_state = hp == 100 and mp == 100
+print(f'캐릭터 버프 발동: {is_full_state}')  # False
 
-# or 연산자
-print('{} > 0 or {} > 0 : {}'.format(a, b, a > 0 or b > 0))     # True
-print('{} < 0 or {} < 0 : {}'.format(a, b, a < 0 or b < 0))     # False
+# 레벨업 또는 퀘스트 완료시 보상
+quest_complete = True
+gets_reward = level >= 30 or quest_complete
+print(f'보상 획득: {gets_reward}')  # True
 
-# not 연산자
-print('not {} : {}'.format(a, not a))    # False (0이 아닌 숫자는 True로 인식)
-print('not {} : {}'.format(b, not b))    # True (0은 False로 인식)
+# 2. 던전 입장 조건 체크
+dungeon_level = 25
+required_items = ['드래곤의 검', '마법 방패']
+player_items = ['드래곤의 검', '마법 방패', '체력 포션']
 
-# 2. 논리 연산자 활용
-print('\n===== 논리 연산자 활용 =====')
-age = 25
-height = 175
+can_enter = (level >= dungeon_level and
+           all(item in player_items for item in required_items))
+print(f'\n던전 입장 가능?: {can_enter}')
 
-# 군 입대 조건 (20세 이상, 키 170cm 이상)
-is_eligible = age >= 20 and height >= 170
-print('나이: {}, 키: {}'.format(age, height))
-print('군 입대 가능 여부: {}'.format(is_eligible))
+# 3. 게임 시스템 상태
+server_status = True
+maintenance = False
+emergency = False
 
-# 3. 진리값 판정
-print('\n===== 진리값 판정 =====')
-# False로 판정되는 값들
-print('False로 판정되는 값들:')
-print('0: {}'.format(bool(0)))           # False
-print('빈 문자열: {}'.format(bool('')))   # False
-print('None: {}'.format(bool(None)))     # False
-print('빈 리스트: {}'.format(bool([])))   # False
+# 게임 플레이 가능 여부
+can_play = server_status and not (maintenance or emergency)
+print(f'게임 플레이 가능?: {can_play}')  # True
 
-# True로 판정되는 값들
-print('\nTrue로 판정되는 값들:')
-print('숫자 1: {}'.format(bool(1)))              # True
-print('문자열 "False": {}'.format(bool("False"))) # True
-print('리스트 [0]: {}'.format(bool([0])))        # True
+# 4. 플레이어 상태 이상
+poisoned = True
+cursed = False
+stunned = True
 
-# 4. 복합 논리 연산
-print('\n===== 복합 논리 연산 =====')
-x = 10
-y = 20
-z = 30
+# 상태이상 해제 아이템 사용 조건
+needs_healing = poisoned or cursed or stunned
+needs_immediate = poisoned and stunned
 
-# 여러 조건 조합
-result = x < y and y < z
-print('{} < {} and {} < {} : {}'.format(x, y, y, z, result))  # True
-
-result = x < y and y > z
-print('{} < {} and {} > {} : {}'.format(x, y, y, z, result))  # False
-
-result = not (x < y and y > z)
-print('not ({} < {} and {} > {}) : {}'.format(x, y, y, z, result))  # True
-
-'''
-실행 결과:
-===== 기본 논리 연산자 =====
-10 > 0 and 0 > 0 : False
-10 > 0 and 0 >= 0 : True
-10 > 0 or 0 > 0 : True
-10 < 0 or 0 < 0 : False
-not 10 : False
-not 0 : True
-
-===== 논리 연산자 활용 =====
-나이: 25, 키: 175
-군 입대 가능 여부: True
-
-===== 진리값 판정 =====
-False로 판정되는 값들:
-0: False
-빈 문자열: False
-None: False
-빈 리스트: False
-
-True로 판정되는 값들:
-숫자 1: True
-문자열 "False": True
-리스트 [0]: True
-
-===== 복합 논리 연산 =====
-10 < 20 and 20 < 30 : True
-10 < 20 and 20 > 30 : False
-not (10 < 20 and 20 > 30) : True
-'''
+print(f'\n===== 플레이어 상태 =====')
+print(f'상태이상 해제 필요: {needs_healing}')
+print(f'긴급 치료 필요: {needs_immediate}')

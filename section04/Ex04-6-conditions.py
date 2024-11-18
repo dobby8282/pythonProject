@@ -1,77 +1,50 @@
 '''
 파일명: Ex04-6-conditions.py
-내용: 조건 연산자(Conditional Operator) 또는 삼항 연산자(Ternary Operator)
+내용: 게임 시스템에서의 조건 연산자 활용
 
-조건 연산자란?
-   - 조건식의 결과에 따라 참 또는 거짓의 결과를 반환하는 연산자
-   - if-else문을 한 줄로 작성할 수 있어 코드를 간결하게 만들 수 있음
-
-문법:
-   결과값 = 참값 if 조건식 else 거짓값
+조건 연산자:
+   result = value1 if condition else value2
 '''
 
-# 1. 기본 조건 연산자
-print('===== 기본 조건 연산자 =====')
-a = 20
-b = 100
+# 1. 플레이어 상태 체크
+hp = 80
+max_hp = 100
+mp = 50
+max_mp = 100
 
-# 일반적인 if-else문
-if a >= b:
-   result = a - b
-else:
-   result = b - a
+# HP/MP 상태 표시
+hp_status = "양호" if hp >= max_hp * 0.5 else "위험"
+mp_status = "충분" if mp >= max_mp * 0.3 else "부족"
 
-# 조건 연산자 사용
-result = (a - b) if (a >= b) else (b - a)
-print('{}과 {}의 차이는 {}입니다.'.format(a, b, result))
+print(f'체력 상태: {hp_status} ({hp}/{max_hp})')
+print(f'마나 상태: {mp_status} ({mp}/{max_mp})')
 
-# 2. 조건 연산자 활용 예제
-print('\n===== 조건 연산자 활용 =====')
-# 점수에 따른 합격/불합격
-score = 75
-result = "합격" if score >= 70 else "불합격"
-print('점수 {}: {}'.format(score, result))
+# 2. 아이템 강화 시스템
+item_level = 7
+success_rate = 95 if item_level < 5 else (80 if item_level < 8 else 60)
+print(f'\n강화 성공 확률: {success_rate}%')
 
-# 홀수/짝수 판별
-num = 11
-result = "짝수" if num % 2 == 0 else "홀수"
-print('{}: {}'.format(num, result))
+# 3. 플레이어 레벨별 던전 추천
+player_level = 25
+recommended_dungeon = (
+   "고급 던전" if player_level >= 30 else
+   "중급 던전" if player_level >= 20 else
+   "초급 던전"
+)
+print(f'추천 던전: {recommended_dungeon}')
 
-# 절댓값 계산
-x = -99
-abs_x = x if x >= 0 else -x
-print('{}의 절댓값: {}'.format(x, abs_x))
+# 4. PVP 매칭 시스템
+rating = 1850
+tier = (
+   "다이아몬드" if rating >= 2000 else
+   "플래티넘" if rating >= 1800 else
+   "골드" if rating >= 1500 else
+   "실버"
+)
+print(f'\n현재 티어: {tier} ({rating}점)')
 
-# 3. 중첩 조건 연산자
-print('\n===== 중첩 조건 연산자 =====')
-score = 85
-grade = "A" if score >= 90 else ("B" if score >= 80 else "C")
-print('점수 {}: 등급 {}'.format(score, grade))
-
-# 4. 조건 연산자와 문자열 포매팅
-print('\n===== 조건 연산자와 문자열 포매팅 =====')
-age = 20
-status = "성인" if age >= 20 else "미성년자"
-print('나이 {}세: {}'.format(age, status))
-
-temperature = 38.5
-condition = "정상" if temperature <= 37.5 else "발열"
-print('체온 {:.1f}도: {}'.format(temperature, condition))
-
-'''
-실행 결과:
-===== 기본 조건 연산자 =====
-20과 100의 차이는 80입니다.
-
-===== 조건 연산자 활용 =====
-점수 75: 합격
-11: 홀수
--99의 절댓값: 99
-
-===== 중첩 조건 연산자 =====
-점수 85: 등급 B
-
-===== 조건 연산자와 문자열 포매팅 =====
-나이 20세: 성인
-체온 38.5도: 발열
-'''
+# 5. 퀘스트 보상 계산
+quest_difficulty = "하드"
+quest_reward = 1000 if quest_difficulty == "노말" else 2000
+bonus = quest_reward * (0.5 if player_level > 20 else 0.2)
+print(f'퀘스트 보상: {quest_reward + bonus}골드')

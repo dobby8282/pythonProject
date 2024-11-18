@@ -1,78 +1,29 @@
 '''
 파일명: Ex02-5-list-1.py
-List
-    단일 변수에 여러 항목을 저장하는데 사용된다.
-    List 항목은 순서가 지정되고 변경 가능하며 중복값 허용
-    List 에는 다양한 데이터 유형이 포함될 수 있다.
+리스트(List) 기본:
+   - 순서가 있는 데이터 집합
+   - 중복 허용, 수정 가능
+   - 다양한 자료형 포함 가능
 '''
-thislist = ['피카츄', '라이츄', '꼬부기']
-print(thislist)
-print(thislist[0])
 
-# List 길이
-print(len(thislist))    # len() 함수 리스트 길이
+# 1. 리스트 생성과 접근
+pokemon_list = ['피카츄', '라이츄', '꼬부기']
+print('리스트 전체:', pokemon_list)
+print('첫번째 포켓몬:', pokemon_list[0])
+print('리스트 길이:', len(pokemon_list))
 
-# List 데이터유형
-list1 = ['피카츄', '라이츄', '파이리']
-list2 = [1, 2, 3, 4, 5]
-list3 = [True, False, True]
-list4 = ['abc', 34, False, 40]
+# 2. 다양한 데이터 타입
+string_list = ['사과', '바나나', '딸기']
+number_list = [1, 2, 3, 4, 5]
+boolean_list = [True, False, True]
+mixed_list = ['문자열', 100, True, 3.14]
 
-# 항목 접근
-thislist = ['피카츄', '라이츄', '파이리']
-print(thislist[1])
+# 3. 리스트 수정
+pokemon_list = ['피카츄', '라이츄', '파이리']
+pokemon_list[1] = '잠만보'  # 단일 항목 수정
+print('수정된 리스트:', pokemon_list)
 
-# 변경
-thislist[1] = '잠만보'
-print(thislist)
-
-# 항목 변경 2개
-thislist = ['피카츄', '라이츄', '파이리', '꼬부기', '버터플', '야도란']
-thislist[1:3] = ['울먹이', '메타몽']
-print(thislist)
-
-# 두번째 세번째 값을 하나의 값으로 변경
-thislist = ['피카츄', '라이츄', '파이리', '꼬부기', '버터플', '야도란']
-thislist[1:3] = ['잠만보']
-print(thislist)
-
-# 항목추가
-thislist = ["피카츄", "라이츄", "파이리"]
-thislist.append("꼬부기")
-print(thislist)
-
-# 항목추가 - 인덱스번호로 추가(insert)
-thislist = ['피카츄', '라이츄', '파이리']
-thislist.insert(1, '잠만보')
-print(thislist)
-
-# 항목 값으로 제거
-thislist = ['피카츄', '라이츄', '파이리']
-thislist.remove('라이츄')
-print(thislist)
-
-# 항목을 지정된 인덱스로 제거
-thislist = ['피카츄', '라이츄', '파이리']
-thislist.pop(2)
-print(thislist)
-
-# 마지막 값 제거
-thislist = ['꼬부기', '버터플', '야도란', '피존투']
-thislist.pop()
-print(thislist)
-
-# 목록 삭제
-thislist = ['피카츄', '라이츄', '파이리']
-thislist.clear()
-print(thislist)
-
-# 확장
-thislist = ['피카츄', '라이츄', '파이리']
-thislist.extend(['버터플', '잠만보'])
-print(thislist)
-
-# 객체 삭제
-# del thislist
-# print(thislist)
-
-
+# 4. 범위 수정
+evolution_list = ['피카츄', '라이츄', '파이리', '리자드', '리자몽']
+evolution_list[1:3] = ['라이츄Z', '메가파이리']  # 범위 수정
+print('진화 업데이트:', evolution_list)

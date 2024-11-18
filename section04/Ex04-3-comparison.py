@@ -1,94 +1,52 @@
 '''
 파일명: Ex04-3-comparison.py
-내용: 관계 연산자(Comparison Operators)
-
-관계 연산자란?
-   - 두 개의 항을 비교하여 그 결과를 논리(bool) 자료형으로 반환
-   - 비교 연산자(Comparison) 또는 비교 연산자(Relational)라고도 함
-
-관계 연산자 종류
-   > : 크다
-   >= : 크거나 같다
-   < : 작다
-   <= : 작거나 같다
-   == : 같다
-   != : 같지 않다
+관계 연산자:
+   - 두 값을 비교하여 bool 값 반환
+   - >, >=, <, <=, ==, !=
 '''
 
-# 1. 기본 관계 연산자
-print('===== 기본 관계 연산자 =====')
-a = 15
-print('{} > 10 : {}'.format(a, a > 10))     # True
-print('{} < 10 : {}'.format(a, a < 10))     # False
-print('{} >= 10 : {}'.format(a, a >= 10))   # True
-print('{} <= 10 : {}'.format(a, a <= 10))   # False
-print('{} == 10 : {}'.format(a, a == 10))   # False
-print('{} != 10 : {}'.format(a, a != 10))   # True
+# 1. 포켓몬 레벨 비교
+pikachu_level = 25
+charmander_level = 20
 
-# 2. 실수 비교
-print('\n===== 실수 비교 =====')
-b = 3.14
-print('{} > 3 : {}'.format(b, b > 3))       # True
-print('{} >= 3.14 : {}'.format(b, b >= 3.14)) # True
-print('{} < 3.2 : {}'.format(b, b < 3.2))   # True
+print(f'피카츄 레벨 > 파이리 레벨: {pikachu_level > charmander_level}')
+print(f'피카츄 레벨 == 파이리 레벨: {pikachu_level == charmander_level}')
 
-# 3. 문자열 비교
-print('\n===== 문자열 비교 =====')
-str1 = 'Python'
-str2 = 'python'
-print('{} == {} : {}'.format(str1, str2, str1 == str2))  # False
-print('{} != {} : {}'.format(str1, str2, str1 != str2))  # True
-print('{} > {} : {}'.format(str1, str2, str1 > str2))    # False
-# 아스키 코드 값 비교: 'P'(80) < 'p'(112)
+# 2. 체력 상태 확인
+max_hp = 100
+current_hp = 45
 
-# 4. 복합 비교
-print('\n===== 복합 비교 =====')
-age = 25
-print('나이: {}'.format(age))
-print('20대 여부: {}'.format(20 <= age < 30))    # True
-print('학생 (8~19세) 여부: {}'.format(8 <= age <= 19))  # False
+print('\n=== HP 상태 체크 ===')
+print(f'체력 50% 이상: {current_hp >= max_hp/2}')
+print(f'체력 30% 이하: {current_hp <= max_hp*0.3}')
 
-# 5. 특수한 비교
-print('\n===== 특수한 비교 =====')
-# None 비교
-x = None
-print('x is None : {}'.format(x is None))        # True
-print('x == None : {}'.format(x == None))        # True (is 사용 권장)
+# 3. 진화 가능 여부
+level = 16
+evolve_level = 16
+has_stone = False
 
-# 객체 비교
-list1 = [1, 2, 3]
-list2 = [1, 2, 3]
-print('list1 == list2 : {}'.format(list1 == list2))  # True (값 비교)
-print('list1 is list2 : {}'.format(list1 is list2))  # False (객체 비교)
+can_evolve = level >= evolve_level
+print(f'\n진화 가능?: {can_evolve}')
+
+# 4. 타입 비교
+type1 = "불꽃"
+type2 = "물"
+print(f'같은 타입?: {type1 == type2}')
+
+# 5. None 비교 (능력치 미설정)
+speed = None
+print(f'스피드 설정됨?: {speed is not None}')
+
+# 6. 객체 비교
+team1 = ['피카츄', '파이리']
+team2 = ['피카츄', '파이리']
+print('\n=== 객체 비교 ===')
+print(f'같은 멤버?: {team1 == team2}')      # True (값 비교)
+print(f'같은 팀?: {team1 is team2}')        # False (객체 비교)
 
 '''
-실행 결과:
-===== 기본 관계 연산자 =====
-15 > 10 : True
-15 < 10 : False
-15 >= 10 : True
-15 <= 10 : False
-15 == 10 : False
-15 != 10 : True
-
-===== 실수 비교 =====
-3.14 > 3 : True
-3.14 >= 3.14 : True
-3.14 < 3.2 : True
-
-===== 문자열 비교 =====
-Python == python : False
-Python != python : True
-Python > python : False
-
-===== 복합 비교 =====
-나이: 25
-20대 여부: True
-학생 (8~19세) 여부: False
-
-===== 특수한 비교 =====
-x is None : True
-x == None : True
-list1 == list2 : True
-list1 is list2 : False
+주의사항:
+1. 실수 비교시 근사값 주의
+2. is는 객체 비교, == 는 값 비교
+3. None 비교는 is 사용 권장
 '''

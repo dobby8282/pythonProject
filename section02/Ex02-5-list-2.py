@@ -10,32 +10,31 @@
     - clear(): 리스트 비우기
 '''
 
-# 1. 리스트에 항목 추가하기
-pokemons = ['피카츄', '라이츄', '파이리']
-print('원본:', pokemons)
 
-pokemons.append('꼬부기')      # 끝에 추가
-print('append 후:', pokemons)
+# 1. 리스트 조작 기본 메서드
+starter_pokemon = ['피카츄', '파이리', '꼬부기']
+starter_pokemon.append('이상해씨')    # 끝에 추가
+starter_pokemon.insert(1, '잠만보')   # 중간 삽입
+print('새로운 스타터:', starter_pokemon)
 
-pokemons.insert(1, '잠만보')   # 중간에 추가
-print('insert 후:', pokemons)
+# 2. 리스트 제거 메서드
+legendary_pokemon = ['그란돈', '가이오가', '레쿠쟈', '히드런']
+print('전설의 포켓몬:', legendary_pokemon)
 
-# 2. 리스트 항목 제거하기
-pokemons = ['피카츄', '라이츄', '파이리', '꼬부기']
-print('원본:', pokemons)
+legendary_pokemon.remove('히드런')  # 값으로 제거
+print('방출 후:', legendary_pokemon)
 
-pokemons.remove('라이츄')      # 값으로 제거
-print('remove 후:', pokemons)
+released = legendary_pokemon.pop(1)  # 인덱스로 제거
+print(f'방출된 포켓몬: {released}')
+print('현재 남은 포켓몬:', legendary_pokemon)
 
-pokemons.pop(1)               # 인덱스로 제거
-print('pop 후:', pokemons)
+# 2. 리스트 확장과 초기화
+hoenn_team = ['나무지기', '가디안']
+sinnoh_team = ['불꽃숭이', '팽도리']
+hoenn_team.extend(sinnoh_team)    # 리스트 합치기
+print('연합팀:', hoenn_team)
 
-# 3. 리스트 확장하기
-pokemons = ['피카츄', '라이츄']
-new_pokemons = ['버터플', '잠만보']
-pokemons.extend(new_pokemons)
-print('확장된 리스트:', pokemons)
+hoenn_team.clear()    # 리스트 비우기
+print('리셋된 팀:', hoenn_team)
 
-# 4. 리스트 비우기
-pokemons.clear()
-print('빈 리스트:', pokemons)
+# del hoenn_team      # 리스트 객체 삭제
