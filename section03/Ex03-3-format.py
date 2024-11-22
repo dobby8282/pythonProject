@@ -47,3 +47,23 @@ print(f'레벨(16진수): {level:x}')
 # 소수점
 accuracy = 98.7654
 print(f'명중률: {accuracy:.2f}%')
+
+'''
+print 형식문자
+    %d : 정수 데이터
+    %f : 실수 데이터
+    %o : 8진수 데이터
+    %x : 16진수 데이터
+    %s : 문자열 데이터
+    %c : 문자 하나 데이터
+'''
+a, b = 10, 20
+print('a = %d, b = %d ' % (a, b))
+
+'''
+tmp = a
+a = b 
+b = tmp
+'''
+a, b = b, a
+print('a = %d, b = %d ' % (a, b))
