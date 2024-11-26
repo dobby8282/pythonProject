@@ -2,7 +2,8 @@
 파일명: Ex04-4-logical.py
 내용: 논리 연산자와 활용
 
-논리 연산자:
+논리 연산자
+   참/거짓을 판단하는 연산자
    and : 둘 다 True일 때만 True
    or  : 하나라도 True이면 True
    not : True ⟷ False 반전
