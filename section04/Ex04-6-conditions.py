@@ -2,8 +2,10 @@
 파일명: Ex04-6-conditions.py
 내용: 게임 시스템에서의 조건 연산자 활용
 
-조건 연산자:
+조건 연산자(삼항 연산자) 
    result = value1 if condition else value2
+
+   condition이 True면 value1을, False면 value2를 result에 할당
 '''
 
 # 1. 플레이어 상태 체크
