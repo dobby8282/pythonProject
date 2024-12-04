@@ -17,14 +17,6 @@ print(time.ctime(time.time()))
 print(time.strftime('%Y-%m-%d %H:%M:%S'))
 print(time.strftime('%Y년 %m월 %d일 %H:%M:%S'))
 
-# 한글 인코딩 문제 해결을 위한 방법
-print(time.strftime(
-        '%Y년 %m월 %d일'
-        .encode('unicode-escape')
-        .decode()
-    ).encode().decode('unicode-escape')
-)
-
 # 1초 동안 프로그램 실행 중지
 time.sleep(1)
 
