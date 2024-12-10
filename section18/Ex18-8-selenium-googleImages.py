@@ -13,6 +13,9 @@ https://chromedriver.chromium.org/downloads
 크롬 우측상단 ... -> 도움말 -> 크롬정보 -> 버전확인
                 -> 같은 버전 chromedriver 다운로드
 
+pip install selenium
+pip install webdriver-manager
+
 '''
 import os
 import time
