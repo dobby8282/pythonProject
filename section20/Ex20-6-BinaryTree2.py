@@ -20,6 +20,44 @@ class BinaryTree:
     def __init__(self, root):
         self.root = TreeNode(root) # 루트노드
 
+
+    #전위순회 root-> left -> right
+    '''
+    preorder_traversal(bt.root, "")
+    
+    preorder_traversal((5), "") -> traversal = "5#"
+        (5) 1번 -> "5#3#2#4#" 
+            preorder_traversal((3), "5#") -> traversal = "5#3#"
+                (3) 1번  -> "5#3#2#"
+                     preorder_traversal((2), "5#3#") -> traversal = "5#3#2#"
+                     (2) 1번
+                        preorder_traversal(None, "5#3#2#") -> traversal = "5#3#2#"
+                     (2) 2번
+                        preorder_traversal(None, "5#3#2#") -> traversal = "5#3#2#"
+                (3) 2번  -> "5#3#2#4#" 
+                     preorder_traversal((4), "5#3#2#") -> traversal = "5#3#2#4#"
+                     (4) 1번
+                        preorder_traversal(None, "5#3#2#4#") -> traversal = "5#3#2#4#"
+                     (4) 2번
+                        preorder_traversal(None, "5#3#2#4#") -> traversal = "5#3#2#4#"
+                    
+        (5) 2번 -> "5#3#2#4#7#6#8"
+            preorder_traversal((7), "5#3#2#4#") -> traversal = "5#3#2#4#7#"
+            (7) 1번  -> "5#3#2#4#7#6#"
+                preorder_traversal((6), "5#3#2#4#7#") -> traversal = "5#3#2#4#7#6#"
+                (6) 1번
+                    preorder_traversal(None, "5#3#2#4#7#6#") -> traversal = "5#3#2#4#7#6#"
+                (6) 2번
+                    preorder_traversal(None, "5#3#2#4#7#6#") -> traversal = "5#3#2#4#7#6#"
+            (7) 2번 -> "5#3#2#4#7#6#8"
+                preorder_traversal((8), "5#3#2#4#7#6#") -> traversal = "5#3#2#4#7#6#8"
+                (8) 1번
+                    preorder_traversal(None, "5#3#2#4#7#6#8#") -> traversal = "5#3#2#4#7#6#8"
+                (8) 2번
+                    preorder_traversal(None, "5#3#2#4#7#6#8#") -> traversal = "5#3#2#4#7#6#8"
+
+    전위 순회:  5#3#2#4#7#6#8#
+    '''
     def preorder_traversal(self, start, traversal):
         if start:
             traversal += (str(start.value) + '#')
@@ -29,6 +67,50 @@ class BinaryTree:
             traversal = self.preorder_traversal(start.right, traversal)
         return traversal
 
+    # 중위순회 left -> root -> right
+    '''
+    bt.inorder_traversal(bt.root, "")
+    
+    inorder_traversal((5), "")
+    (5) 1번 -> 2#3#4#
+        inorder_traversal((3), "")
+        (3) 1번 -> "2#"
+            inorder_traversal((2), "")
+                (2) 1번
+                    inorder_traversal(None, "") -> traversal = ""
+                traversal += (str(start.value)+ '#') -> traversal = "2#"
+                (2) 2번
+                    inorder_traversal(None, "2#") -> traversal = "2#"
+         traversal += (str(start.value)+ '#') -> traversal = "2#3#" 
+        (3) 2번 -> 2#3#4#
+            inorder_traversal((4), "2#3#")
+            (4) 1번
+                inorder_traversal(None, "2#3#") -> traversal = "2#3#"
+            traversal += (str(start.value)+ '#') -> traversal = "2#3#4#"  
+            (4) 2번
+                inorder_traversal(None, "2#3#4#") -> traversal = "2#3#4#"
+            
+    traversal += (str(start.value)+ '#') -> traversal = "2#3#4#5#"     
+   
+    (5) 2번 -> "2#3#4#5#6#7#8#"
+        inorder_traversal((7), "2#3#4#5#")
+        (7) 1번 -> 2#3#4#5#6#
+            inorder_traversal((6), "2#3#4#5#")
+            (6) 1번
+                inorder_traversal(None, "2#3#4#5#")
+            traversal += (str(start.value)+ '#') -> traversal = "2#3#4#5#6#"
+            (6) 2번
+                inorder_traversal(None, "2#3#4#5#6%") -> traversal = "2#3#4#5#6#"
+            
+        traversal += (str(start.value)+ '#') -> traversal = "2#3#4#5#6#7#"
+        (7) 2번 -> "2#3#4#5#6#7#8#"
+            inorder_traversal((8), "2#3#4#5#6#7#")
+            (8) 1번
+                inorder_traversal(None, "2#3#4#5#6#7#")
+            traversal += (str(start.value)+ '#') -> traversal = "2#3#4#5#6#7#8#"
+            (8) 2번
+                inorder_traversal(None, "2#3#4#5#6#7#8#")  -> traversal = "2#3#4#5#6#7#8#"
+    '''
     def inorder_traversal(self, start, traversal):
         if start:
             traversal = self.inorder_traversal(start.left, traversal)
@@ -57,6 +139,11 @@ class BinaryTree:
         else:
             return self._search(value, current_node.right)
 
+    # 삽입 메소드 : 이진 탐색을 사용하여 새 노드를 삽입
+    '''
+    insert(3) -> _insert(3, TreeNode(5))
+    
+    '''
 
     def insert(self, value):
         if not self.root:
@@ -64,6 +151,32 @@ class BinaryTree:
         else:
             self._insert(value, self.root)
 
+    '''
+    3 7 2 4 6  8
+    
+    value = 3
+    current_node = TreeNode(5) -> current_node.left = TreeNode(3)
+    
+    value = 7
+    current_node = TreeNode(5) -> current_node.right = TreeNode(7)
+    
+    
+    _insert(2, TreeNode(5))
+    value = 2    
+    current_node = TreeNode(5) 
+        _insert(2, TreeNode(3))
+        value = 2
+        current_node = TreeNode(3) -> TreeNode(3).left = TreeNode(2)
+    _insert(4, TreeNode(5))
+        _insert(4, TreeNode(3)) -> TreeNode(3).right = TreeNode(4)
+    
+    _insert(6, TreeNode(5))    
+        _insert(6, TreeNode(7)) -> TreeNode(7).left = TreeNode(6)
+    
+    _insert(8, TreeNode(5))
+        _insert(8, TreeNode(7))
+    
+    '''
     def _insert(self, value, current_node):
         if value < current_node.value:
             if not current_node.left:   # current_node.left 값이 None 실행

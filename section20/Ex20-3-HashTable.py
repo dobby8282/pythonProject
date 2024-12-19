@@ -18,8 +18,6 @@ class HashTable:
 
     def insert(self, key, value):
 
-        # key : 'John Doe'
-        # value : '555-555-5555'
         hash_index = self.has_function(key)
 
         if self.hash_table[hash_index] is None:
@@ -37,9 +35,6 @@ class HashTable:
         return None
 
 # 실행 코드
-
-print(hash('KoreaIT Doe') % 10)
-
 hash_table = HashTable(10)  # 크기가 10인 hashtable 생성
 hash_table.insert('John Doe', '555-555-5555')
 hash_table.insert('Jane Doe', '555-555-5556')
