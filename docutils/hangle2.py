@@ -1,116 +1,54 @@
+import platform
+import matplotlib.pyplot as plt
+from matplotlib import rc
 import win32com.client as win32
 import os
-from datetime import datetime
 
+# (1) 한글 폰트 설정 및 그래프 생성
+if platform.system() == 'Windows':
+    font_name = 'Malgun Gothic'
+    rc('font', family=font_name)
 
-def create_advanced_hwp(output_path):
-    """
-    표, 스타일, 이미지 등이 포함된 HWP 파일을 생성하는 함수
+plt.rcParams['axes.unicode_minus'] = False
 
-    Args:
-        output_path (str): 생성할 HWP 파일의 절대 경로
-    """
-    try:
-        # 한글 실행
-        hwp = win32.gencache.EnsureDispatch("HWPFrame.HwpObject")
-        hwp.XHwpWindows.Item(0).Visible = True
+x = [1, 2, 3, 4, 5]
+y = [10, 15, 13, 17, 20]
 
-        # 새 문서 생성
-        hwp.Run("FileNew")
+plt.plot(x, y, marker='o', linestyle='-', color='blue')
+plt.title('샘플 데이터 그래프', fontsize=14)
+plt.xlabel('X축 (개)', fontsize=12)
+plt.ylabel('Y축 (값)', fontsize=12)
+plt.grid(True)
 
-        # 제목 추가 (글자 크기 키우고 가운데 정렬)
-        hwp.HAction.GetDefault("CharShape", hwp.HParameterSet.HCharShape.HSet)
-        hwp.HParameterSet.HCharShape.Height = 1800  # 글자 크기
-        hwp.HAction.Execute("CharShape", hwp.HParameterSet.HCharShape.HSet)
+chart_filename = os.path.join(os.getcwd(), 'chart.png')
+plt.savefig(chart_filename, dpi=150, bbox_inches='tight')
+plt.close()
 
-        hwp.HAction.GetDefault("ParaShape", hwp.HParameterSet.HParaShape.HSet)
-        # hwp.HParameterSet.HParaShape.Alignment = 1  # 가운데 정렬
-        hwp.HAction.Execute("ParaShape", hwp.HParameterSet.HParaShape.HSet)
+# (2) 한글 OLE 객체 연결
+hwp = win32.gencache.EnsureDispatch("HWPFrame.HwpObject")
+hwp.XHwpWindows.Item(0).Visible = True
 
-        hwp.HAction.GetDefault("InsertText", hwp.HParameterSet.HInsertText.HSet)
-        hwp.HParameterSet.HInsertText.Text = "회사 업무 보고서"
-        hwp.HAction.Execute("InsertText", hwp.HParameterSet.HInsertText.HSet)
-        hwp.HAction.Execute("BreakPara", hwp.HParameterSet.HInsertText.HSet)
+# (3) 새 문서 생성
+hwp.Run("FileNew")
 
-        # 기본 글자 크기로 복귀
-        hwp.HAction.GetDefault("CharShape", hwp.HParameterSet.HCharShape.HSet)
-        hwp.HParameterSet.HCharShape.Height = 1000
-        hwp.HAction.Execute("CharShape", hwp.HParameterSet.HCharShape.HSet)
+# (4) 텍스트 삽입
+hwp.HAction.GetDefault("InsertText", hwp.HParameterSet.HInsertText.HSet)
+hwp.HParameterSet.HInsertText.Text = "이 문서는 파이썬을 통해 자동으로 생성된 한글 문서입니다.\n아래는 파이썬으로 만든 그래프 이미지입니다.\n\n"
+hwp.HAction.Execute("InsertText", hwp.HParameterSet.HInsertText.HSet)
 
-        # 왼쪽 정렬로 복귀
-        hwp.HAction.GetDefault("ParaShape", hwp.HParameterSet.HParaShape.HSet)
-        # hwp.HParameterSet.HParaShape.Alignment = 0
-        hwp.HAction.Execute("ParaShape", hwp.HParameterSet.HParaShape.HSet)
+# (5) 그림 삽입
+set = hwp.HParameterSet # 파라미터 세트 가져오기
+act = hwp.HAction      # 액션 가져오기
 
-        # 날짜 추가
-        current_date = datetime.now().strftime("%Y년 %m월 %d일")
-        hwp.HAction.GetDefault("InsertText", hwp.HParameterSet.HInsertText.HSet)
-        hwp.HParameterSet.HInsertText.Text = f"작성일: {current_date}"
-        hwp.HAction.Execute("InsertText", hwp.HParameterSet.HInsertText.HSet)
-        hwp.HAction.Execute("BreakPara", hwp.HParameterSet.HInsertText.HSet)
-        hwp.HAction.Execute("BreakPara", hwp.HParameterSet.HInsertText.HSet)
+act.GetDefault("InsertPicture", set.HInsertPicture.HSet)    # 그림 삽입 액션의 파라미터를 기본값으로 설정
+set.HInsertPicture.FileName = chart_filename    # 삽입할 그림 파일의 경로를 지정
+set.HInsertPicture.Width = 100      # 그림의 너비를 100mm로 설정
+set.HInsertPicture.Height = 80      # 그림의 높이를 80mm로 설정
+act.Execute("InsertPicture", set.HInsertPicture.HSet)  # 설정한 파라미터로 그림 삽입 액션 실행
 
-        # 표 생성
-        hwp.Run("TableCreate", "4;3;1;8000;0;0;0")  # 4행 3열 표 생성
+# (6) 문서 저장
+save_path = os.path.join(os.getcwd(), "자동_생성_문서.hwp")
+hwp.SaveAs(save_path)
 
-        # 표 선택
-        hwp.Run("TableCellBlock")
-
-        # 표 첫 행 배경색 지정 (연한 회색)
-        hwp.Run("TableCellBlockCol")
-        hwp.Run("CellFill", "ColorFill;RGB(220,220,220)")
-        hwp.Run("TableSelectCell")  # 선택 해제
-
-        # 표 내용 입력
-        table_contents = [
-            ["구분", "진행률", "담당자"],
-            ["AI 챗봇", "75%", "홍길동"],
-            ["데이터 분석", "90%", "김철수"],
-            ["서버 구축", "85%", "이영희"]
-        ]
-
-        # 첫 셀로 이동
-        hwp.Run("TableFirstCell")
-
-        # 표 내용 입력
-        for row in table_contents:
-            for cell in row:
-                hwp.HAction.GetDefault("InsertText", hwp.HParameterSet.HInsertText.HSet)
-                hwp.HParameterSet.HInsertText.Text = cell
-                hwp.HAction.Execute("InsertText", hwp.HParameterSet.HInsertText.HSet)
-                if cell != row[-1]:  # 행의 마지막 셀이 아니면
-                    hwp.Run("TableRightCell")  # 오른쪽 셀로 이동
-            if row != table_contents[-1]:  # 마지막 행이 아니면
-                hwp.Run("TableDownCell")  # 아래 셀로 이동
-                hwp.Run("TableFirstCell")  # 행의 첫 번째 셀로 이동
-
-        # 표 끝으로 이동하고 줄바꿈
-        hwp.Run("TableRightCell")
-        hwp.Run("BreakPara")
-
-        # 이미지 삽입 (샘플 이미지 경로를 실제 이미지 경로로 변경하세요)
-        # image_path = "sampleimage.png"  # 실제 이미지 경로로 변경 필요
-        # if os.path.exists(image_path):
-        #     hwp.InsertPicture(image_path, True)
-
-        # 파일 저장
-        abs_path = os.path.abspath(output_path)
-        hwp.SaveAs(abs_path)
-
-        # 한글 종료
-        hwp.Quit()
-
-        print(f"HWP 파일이 성공적으로 생성되었습니다: {abs_path}")
-
-    except Exception as e:
-        print(f"에러 발생: {str(e)}")
-
-
-def main():
-    current_dir = os.getcwd()
-    output_file = os.path.join(current_dir, "고급업무보고서.hwp")
-    create_advanced_hwp(output_file)
-
-
-if __name__ == "__main__":
-    main()
+# (7) 한글 종료
+hwp.Quit()
