@@ -1,8 +1,42 @@
+'''
+OpenAI TTS(Text-to-Speech) API 사용하기
+   텍스트를 자연스러운 음성으로 변환하는 기술
+   다양한 음성 특성과 감정을 표현 가능
+
+음성 생성 주요 매개변수
+   1. model
+       - "tts-1": OpenAI의 음성 합성 모델
+       - 자연스럽고 고품질의 음성 생성
+
+   2. voice (음성 특성 선택)
+       - alloy: 중성적이고 균형 잡힌 톤 (기본값)
+       - echo: 깊고 차분한 톤
+       - fable: 부드럽고 따뜻한 톤
+       - onyx: 강력하고 단호한 톤
+       - nova: 전문적이고 집중된 톤
+       - shimmer: 밝고 긍정적인 톤
+
+   3. input (필수)
+       - 음성으로 변환할 텍스트
+       - 다양한 언어 지원 (한국어, 영어 등)
+
+파일 저장
+   - stream_to_file(): 생성된 음성을 MP3 파일로 저장
+   - 지정된 경로에 오디오 파일 생성
+
+특징
+   - 다양한 감정과 톤 표현 가능
+   - 여러 언어 지원
+   - 자연스러운 발음과 억양
+   - API 사용량에 따른 비용 발생
+'''
+
 # OpenAI TTS(Text-to-Speech) 예제
 from openai import OpenAI
 import os
 
 client = OpenAI()
+
 
 def generate_speech(text, voice="alloy", output_file="speech.mp3"):
     """
@@ -32,6 +66,7 @@ def generate_speech(text, voice="alloy", output_file="speech.mp3"):
         return f"Speech saved to {output_file}"
     except Exception as e:
         return f"Error generating speech: {str(e)}"
+
 
 # 사용 예시
 if __name__ == "__main__":

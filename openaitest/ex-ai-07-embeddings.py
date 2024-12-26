@@ -1,19 +1,55 @@
+'''
+OpenAI 임베딩(Embedding) API - 텍스트의 의미를 벡터로 변환
+   텍스트의 의미를 수치화된 벡터로 표현하는 기술
+   텍스트 간 유사도 계산, 검색, 분류 등에 활용
+
+주요 구성요소
+   1. 임베딩 생성
+       - model: "text-embedding-ada-002"
+       - 텍스트를 1536 차원의 벡터로 변환
+       - 의미가 유사한 텍스트는 유사한 벡터값을 가짐
+
+   2. 유사도 계산
+       - 코사인 유사도(Cosine Similarity) 사용
+       - -1 ~ 1 사이의 값으로 유사도 표현
+       - 1에 가까울수록 유사도가 높음
+
+   3. 벡터 연산
+       - numpy 라이브러리 사용
+       - 내적(dot product)과 정규화(norm) 연산
+       - 고차원 벡터의 효율적인 계산
+
+활용 분야
+   1. 검색 시스템
+       - 유사 문서 검색
+       - 관련 콘텐츠 추천
+
+   2. 텍스트 분류
+       - 문서 분류
+       - 감성 분석
+
+   3. 의미 비교
+       - 문장 유사도 측정
+       - 중복 콘텐츠 탐지
+'''
+
 # OpenAI 임베딩 생성 및 유사도 계산 예제
 from openai import OpenAI
 import numpy as np
 
 client = OpenAI()
 
+
 def generate_embedding(text):
     """
     텍스트의 의미를 벡터로 변환합니다.
-    
+
     Parameters:
         text (str): 벡터로 변환할 텍스트
 
     Returns:
         list: 1536 차원의 벡터 또는 에러 메시지
-        
+
     특징:
         - 반환되는 벡터는 1536 차원
         - 텍스트의 의미적 특성을 수치화하여 표현
@@ -28,6 +64,7 @@ def generate_embedding(text):
     except Exception as e:
         return f"Error generating embedding: {str(e)}"
 
+
 def calculate_similarity(embedding1, embedding2):
     """
     두 임베딩 벡터 간의 코사인 유사도를 계산합니다.
@@ -40,6 +77,7 @@ def calculate_similarity(embedding1, embedding2):
                1에 가까울수록 유사도가 높음
     """
     return np.dot(embedding1, embedding2) / (np.linalg.norm(embedding1) * np.linalg.norm(embedding2))
+
 
 def find_most_similar(target_text, text_list):
     """
@@ -54,13 +92,14 @@ def find_most_similar(target_text, text_list):
     """
     target_embedding = generate_embedding(target_text)
     similarities = []
-    
+
     for text in text_list:
         current_embedding = generate_embedding(text)
         similarity = calculate_similarity(target_embedding, current_embedding)
         similarities.append((text, similarity))
-    
+
     return max(similarities, key=lambda x: x[1])
+
 
 # 사용 예시
 if __name__ == "__main__":

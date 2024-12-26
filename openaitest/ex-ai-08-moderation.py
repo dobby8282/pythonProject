@@ -1,3 +1,40 @@
+'''
+OpenAI Moderation API - 콘텐츠 안전성 검사
+   텍스트 내용을 분석하여 유해하거나 부적절한 내용을 감지하는 시스템
+   플랫폼의 안전성과 커뮤니티 가이드라인 준수를 위해 활용
+
+검사 카테고리
+   1. 혐오 발언 관련
+       - hate: 차별, 편견, 혐오 표현
+       - hate/threatening: 위협적인 혐오 발언
+
+   2. 자해 관련
+       - self-harm: 자해, 자살 관련 내용
+
+   3. 성적 콘텐츠
+       - sexual: 일반적인 성적 내용
+       - sexual/minors: 미성년자 관련 성적 내용
+
+   4. 폭력 관련
+       - violence: 일반적인 폭력적 내용
+       - violence/graphic: 심각한 수준의 폭력적 묘사
+
+결과 해석
+   1. flagged
+       - true: 위험한 콘텐츠로 판단
+       - false: 안전한 콘텐츠로 판단
+
+   2. category_scores
+       - 각 카테고리별 위험도 점수 (0~1)
+       - 0: 매우 안전
+       - 1: 매우 위험
+
+활용 분야
+   - 커뮤니티 게시물 관리
+   - 채팅/메시지 필터링
+   - 콘텐츠 자동 검수
+'''
+
 # OpenAI 콘텐츠 중재 API 사용 예제
 from openai import OpenAI
 
@@ -81,10 +118,10 @@ if __name__ == "__main__":
 
     # 예시 3: 여러 문장 동시 검사
     mixed_text = """
-    First sentence: Hello, how are you?
-    Second sentence: I will hurt you.
-    Third sentence: Let's have coffee.
-    """
+   First sentence: Hello, how are you?
+   Second sentence: I will hurt you.
+   Third sentence: Let's have coffee.
+   """
     result3 = check_content(mixed_text)
     print("복합 텍스트 분석:")
     print(format_moderation_result(result3))

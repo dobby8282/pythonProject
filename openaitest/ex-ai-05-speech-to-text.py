@@ -1,8 +1,43 @@
+'''
+OpenAI Whisper API - 음성을 텍스트로 변환(STT)
+   음성 파일을 텍스트로 변환(Speech-To-Text)하는 기술
+   다양한 언어를 자동으로 감지하고 높은 정확도로 변환
+
+주요 매개변수
+   1. model
+       - "whisper-1": OpenAI의 음성 인식 모델
+       - 다국어 지원 및 높은 인식률
+
+   2. file (필수)
+       - 변환할 오디오 파일
+       - 지원 형식: mp3, mp4, mpeg, mpga, m4a, wav, webm
+       - 최대 파일 크기: 25 MB
+
+   3. language (선택)
+       - 오디오의 언어 코드 지정
+       - 예: "ko"(한국어), "en"(영어), "ja"(일본어)
+       - 미지정시 자동 언어 감지
+
+특징
+   1. 파일 처리
+       - with open() 구문으로 안전한 파일 읽기
+       - 바이너리 모드("rb")로 파일 열기
+
+   2. 다국어 지원
+       - 다양한 언어의 자동 감지 및 변환
+       - 특정 언어 지정으로 정확도 향상
+
+   3. 에러 처리
+       - 파일 형식, 크기 제한 등 고려
+       - try-except로 안전한 예외 처리
+'''
+
 # OpenAI Whisper를 사용한 음성-텍스트 변환 예제
 from openai import OpenAI
 import os
 
 client = OpenAI()
+
 
 def transcribe_audio(audio_file_path, language="ko"):
     """
@@ -30,6 +65,7 @@ def transcribe_audio(audio_file_path, language="ko"):
         return transcript.text
     except Exception as e:
         return f"Error transcribing audio: {str(e)}"
+
 
 # 사용 예시
 if __name__ == "__main__":

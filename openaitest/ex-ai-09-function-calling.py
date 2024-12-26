@@ -1,3 +1,36 @@
+'''
+OpenAI Function Calling - AI와 함수 연동하기
+   AI가 사용자의 요청을 분석하여 적절한 함수를 호출하고 결과를 반환하는 시스템
+   자연어 입력을 프로그래밍 함수 호출로 변환
+
+주요 구성요소
+   1. 함수 정의 (tools)
+       - name: 함수 이름
+       - description: 함수 설명
+       - parameters: 매개변수 정의
+           - type: 데이터 타입
+           - properties: 속성 목록
+           - required: 필수 매개변수
+
+   2. 서비스 클래스
+       - 실제 기능을 수행하는 클래스
+       - 외부 API 연동 등을 처리
+       - 예: WeatherService, CalendarService
+
+   3. 처리 과정
+       - 사용자 입력 분석
+       - 적절한 함수 선택
+       - 함수 실행 및 결과 획득
+       - 결과를 자연어로 변환
+
+활용 사례
+   - 날씨 정보 조회
+   - 일정 관리
+   - 예약 시스템
+   - 데이터베이스 조작
+   - 외부 API 연동
+'''
+
 # OpenAI Function Calling 예제
 from openai import OpenAI
 import json
