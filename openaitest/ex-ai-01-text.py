@@ -2,6 +2,10 @@
 OpenAI API 사용하기
    OpenAI에서 제공하는 AI 모델을 파이썬에서 활용하는 방법
 
+
+setx OPENAI_API_KEY
+
+
 주요 구성요소
    1. OpenAI 객체 생성
        - OpenAI 클래스의 인스턴스를 생성하여 API 통신 준비
