@@ -9,10 +9,10 @@ if os.path.exists("dist"):
 
 # 빌드 설정
 PyInstaller.__main__.run([
-    'test.py',
+    'logp.py',
     '--onefile',
     '--noconsole',
-    '--name=SQL로그파서',
+    '--name=logp',
     '--icon=NONE',
     '--clean',
     '--noconfirm',
