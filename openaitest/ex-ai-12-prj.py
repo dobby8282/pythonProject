@@ -12,15 +12,15 @@ from io import BytesIO
 import sv_ttk  # 모던한 UI를 위한 Sun Valley ttk 테마
 import time
 
-
 class MultiAIApp:
     def __init__(self, root):
+        # 초기화 메서드: 앱의 UI 및 기능 초기화
         self.root = root
         self.root.title("AI Assistant")
         self.root.geometry("1000x800")
 
         # 테마 설정
-        sv_ttk.set_theme("dark")  # 다크 테마 적용 (light도 가능)
+        sv_ttk.set_theme("dark")  # 다크 테마 적용
 
         # 스타일 설정
         self.style = ttk.Style()
@@ -29,37 +29,41 @@ class MultiAIApp:
         self.style.configure('Title.TLabel', font=('Helvetica', 12, 'bold'))
         self.style.configure('Status.TLabel', font=('Helvetica', 10))
 
-        # OpenAI 클라이언트 및 대화 기록
+        # OpenAI 클라이언트 및 대화 기록 초기화
         self.client = OpenAI()
         self.conversation_history = []
 
-        # UI 초기화 전에 필요한 메서드들 정의
-        self.current_photo = None
-        self.chat_area = None
-        self.message_entry = None
-        self.loading_label = None
-        self.image_prompt = None
-        self.image_label = None
-        self.image_status = None
-        self.tts_text = None
-        self.stt_result = None
+        # UI 요소 초기화
+        self.current_photo = None  # 이미지 생성 결과 참조 유지용
+        self.chat_area = None  # 채팅 영역
+        self.message_entry = None  # 메시지 입력 영역
+        self.loading_label = None  # 상태 표시 라벨
+        self.image_prompt = None  # 이미지 생성 프롬프트 입력 필드
+        self.image_label = None  # 생성된 이미지 표시 라벨
+        self.image_status = None  # 이미지 상태 메시지 라벨
+        self.tts_text = None  # TTS 입력 필드
+        self.stt_result = None  # STT 변환 결과 출력 필드
 
+        # UI 설정 메서드 호출
         self.setup_ui()
 
     def send_message(self, event=None):
-        message = self.message_entry.get().strip()
+        # 메시지 전송 메서드
+        message = self.message_entry.get().strip()  # 입력 필드에서 메시지 가져오기
         if not message:
             return
 
+        # 입력 필드 초기화 및 사용자 메시지 표시
         self.message_entry.delete(0, tk.END)
         self.chat_area.insert(tk.END, f"나: {message}\n")
         self.chat_area.see(tk.END)
 
+        # 응답 생성 중 표시
         self.loading_label.config(text="🤔 응답을 생성하는 중...")
-        threading.Thread(target=self.get_gpt_response,
-                         args=(message,)).start()
+        threading.Thread(target=self.get_gpt_response, args=(message,)).start()  # 응답 생성 비동기 처리
 
     def get_gpt_response(self, message):
+        # OpenAI GPT 모델에 사용자 메시지 전달 및 응답 받기
         try:
             self.conversation_history.append({"role": "user", "content": message})
 
@@ -68,11 +72,12 @@ class MultiAIApp:
                 messages=self.conversation_history
             )
 
-            assistant_message = response.choices[0].message.content
+            assistant_message = response.choices[0].message.content  # GPT의 응답 가져오기
             self.conversation_history.append(
                 {"role": "assistant", "content": assistant_message}
             )
 
+            # UI 업데이트 요청
             self.root.after(0, self.update_chat_area, assistant_message)
         except Exception as e:
             self.root.after(0, self.update_chat_area, f"❌ Error: {str(e)}")
@@ -80,19 +85,22 @@ class MultiAIApp:
             self.root.after(0, self.loading_label.config, {"text": ""})
 
     def update_chat_area(self, response_text):
+        # GPT 응답을 채팅 영역에 표시
         self.chat_area.insert(tk.END, f"GPT: {response_text}\n\n")
         self.chat_area.see(tk.END)
 
     def new_chat(self):
+        # 새 대화 시작 메서드
         if self.chat_area.get("1.0", tk.END).strip():
-            self.auto_save_chat()
+            self.auto_save_chat()  # 이전 대화 자동 저장
 
-        self.conversation_history = []
+        self.conversation_history = []  # 대화 기록 초기화
         self.chat_area.delete("1.0", tk.END)
         self.chat_area.insert(tk.END, "✨ 새로운 대화가 시작되었습니다.\n\n")
         self.chat_area.see(tk.END)
 
     def auto_save_chat(self):
+        # 대화 자동 저장 메서드
         save_dir = "chat_history"
         if not os.path.exists(save_dir):
             os.makedirs(save_dir)
@@ -105,6 +113,7 @@ class MultiAIApp:
         self.chat_area.see(tk.END)
 
     def save_chat_to_file(self, file_path):
+        # 대화 내용을 Word 파일로 저장
         doc = Document()
         doc.add_heading('AI Assistant 대화 내역', 0)
         doc.add_paragraph(
@@ -131,6 +140,7 @@ class MultiAIApp:
         doc.save(file_path)
 
     def save_to_docx(self):
+        # 대화 내역을 Word 파일로 저장하기 위한 메서드
         try:
             file_path = filedialog.asksaveasfilename(
                 defaultextension=".docx",
@@ -151,7 +161,7 @@ class MultiAIApp:
             self.chat_area.see(tk.END)
 
     def setup_ui(self):
-        # 메인 컨테이너
+        # UI 초기화 및 구성
         main_container = ttk.Frame(self.root, padding="10")
         main_container.pack(fill='both', expand=True)
 
@@ -160,11 +170,12 @@ class MultiAIApp:
         self.notebook.pack(fill='both', expand=True)
 
         # 탭 설정
-        self.setup_chat_tab()
-        self.setup_image_tab()
-        self.setup_voice_tab()
+        self.setup_chat_tab()  # 채팅 탭 구성
+        self.setup_image_tab()  # 이미지 생성 탭 구성
+        self.setup_voice_tab()  # 음성 변환 탭 구성
 
     def setup_chat_tab(self):
+        # 채팅 탭 UI 구성
         self.chat_frame = ttk.Frame(self.notebook, style='Chat.TFrame')
         self.notebook.add(self.chat_frame, text=' 💬 채팅 ')
 
@@ -236,6 +247,7 @@ class MultiAIApp:
         self.loading_label.pack(pady=5)
 
     def setup_image_tab(self):
+        # 이미지 생성 탭 UI 구성
         self.image_frame = ttk.Frame(self.notebook, style='Chat.TFrame')
         self.notebook.add(self.image_frame, text=' 🎨 이미지 생성 ')
 
@@ -330,6 +342,7 @@ class MultiAIApp:
         self.image_status.pack(pady=5)
 
     def setup_voice_tab(self):
+        # 음성 변환 탭 UI 구성
         self.voice_frame = ttk.Frame(self.notebook, style='Chat.TFrame')
         self.notebook.add(self.voice_frame, text=' 🎤 음성 변환 ')
 
@@ -401,80 +414,86 @@ class MultiAIApp:
         self.stt_result.pack(fill='x', pady=5)
 
     def generate_image(self):
+        # 이미지 생성 메서드
         prompt = self.image_prompt.get().strip()
         if not prompt:
             self.image_status.config(text="⚠️ 이미지 설명을 입력해주세요.")
             return
 
         self.image_status.config(text="🎨 이미지를 생성하는 중...")
-        threading.Thread(target=self.generate_image_thread,
-                         args=(prompt,)).start()
+        threading.Thread(target=self.generate_image_thread, args=(prompt,)).start()
 
     def generate_image_thread(self, prompt):
         try:
+            # DALL-E API를 호출하여 이미지 생성 요청
             response = self.client.images.generate(
-                model="dall-e-3",
-                prompt=prompt,
-                size=self.size_var.get(),
-                quality=self.quality_var.get(),
-                n=1,
-                style="natural"
+                model="dall-e-3",  # 사용할 DALL-E 모델
+                prompt=prompt,  # 사용자 입력 프롬프트
+                size=self.size_var.get(),  # 이미지 크기 (UI에서 선택된 값)
+                quality=self.quality_var.get(),  # 이미지 품질 (UI에서 선택된 값)
+                n=1,  # 생성할 이미지 개수
+                style="natural"  # 이미지 스타일
             )
 
-            # 이미지 URL 가져오기
+            # 생성된 이미지의 URL 가져오기
             image_url = response.data[0].url
             image_response = requests.get(image_url)
-            image = Image.open(BytesIO(image_response.content))
+            image = Image.open(BytesIO(image_response.content))  # URL에서 이미지 읽기
 
-            # 이미지 크기 조정
-            max_size = (800, 800)  # 크기 증가
+            # 이미지 크기 조정 (최대 800x800 픽셀)
+            max_size = (800, 800)
             image.thumbnail(max_size, Image.Resampling.LANCZOS)
 
-            photo = ImageTk.PhotoImage(image)
+            photo = ImageTk.PhotoImage(image)  # Tkinter용 이미지 객체 생성
 
-            # 이미지와 상태 메시지 업데이트
+            # UI에 이미지와 상태 메시지 업데이트
             self.root.after(0, self.update_image, photo, "✨ 이미지가 생성되었습니다!")
 
-            # 이미지 자동 저장
-            save_dir = "generated_images"
+            # 생성된 이미지를 로컬 폴더에 자동 저장
+            save_dir = "generated_images"  # 저장 디렉토리
             if not os.path.exists(save_dir):
-                os.makedirs(save_dir)
+                os.makedirs(save_dir)  # 디렉토리가 없으면 생성
 
+            # 파일 이름에 타임스탬프 추가하여 저장
             timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
             save_path = os.path.join(save_dir, f"generated_image_{timestamp}.png")
             image.save(save_path)
 
         except Exception as e:
+            # 예외 발생 시 오류 메시지 출력 및 UI 업데이트
             error_message = str(e)
             self.root.after(0, self.image_status.config,
                             {"text": f"❌ Error: {error_message}"})
             print(f"Error in image generation: {error_message}")
 
     def update_image(self, photo, status_text):
-        self.current_photo = photo  # 참조 유지
-        self.image_label.config(image=photo)
-        self.image_status.config(text=status_text)
+        # UI에서 이미지를 업데이트하고 상태 텍스트를 변경
+        self.current_photo = photo  # Tkinter에서 이미지가 삭제되지 않도록 참조 유지
+        self.image_label.config(image=photo)  # 이미지 레이블 업데이트
+        self.image_status.config(text=status_text)  # 상태 메시지 업데이트
 
     def generate_speech(self):
-        text = self.tts_text.get("1.0", tk.END).strip()
-        if not text:
+        # 텍스트를 받아서 음성으로 변환
+        text = self.tts_text.get("1.0", tk.END).strip()  # 텍스트 상자의 내용을 가져옴
+        if not text:  # 텍스트가 없으면 종료
             return
 
         try:
+            # 텍스트를 음성으로 변환하는 API 호출
             response = self.client.audio.speech.create(
-                model="tts-1",
-                voice=self.voice_var.get(),
-                input=text
+                model="tts-1",  # TTS 모델
+                voice=self.voice_var.get(),  # 선택된 음성
+                input=text  # 입력 텍스트
             )
 
-            # 임시 파일로 저장
+            # 음성 파일을 임시 파일로 저장
             temp_file = "temp_speech.mp3"
             response.stream_to_file(temp_file)
 
-            # 파일 저장 다이얼로그
+            # 파일 저장 위치를 사용자에게 선택받기
             save_path = filedialog.asksaveasfilename(
-                defaultextension=".mp3",
-                filetypes=[("MP3 files", "*.mp3")],
+                defaultextension=".mp3",  # 기본 확장자
+                filetypes=[("MP3 files", "*.mp3")],  # 파일 형식
                 initialfile=f"speech_{datetime.now().strftime('%Y%m%d_%H%M%S')}.mp3"
             )
 
@@ -484,58 +503,66 @@ class MultiAIApp:
                     os.replace(temp_file, save_path)
 
         except Exception as e:
+            # 예외 발생 시 임시 파일 삭제 및 오류 처리
             if os.path.exists(temp_file):
                 os.remove(temp_file)
             raise e
 
     def speak_last_response(self):
-        # 마지막 GPT 응답을 음성으로 변환
-        chat_content = self.chat_area.get("1.0", tk.END)
+        # 채팅에서 마지막 GPT 응답을 음성으로 변환
+        chat_content = self.chat_area.get("1.0", tk.END)  # 채팅 내용 가져오기
         lines = chat_content.split('\n')
         last_response = None
 
-        # 마지막 GPT 응답 찾기
+        # 마지막 GPT 응답 텍스트 추출
         for line in reversed(lines):
-            if line.startswith("GPT: "):
+            if line.startswith("GPT: "):  # GPT 응답인 줄 확인
                 last_response = line[5:]  # "GPT: " 제거
                 break
 
         if last_response:
+            # 텍스트를 음성 변환 입력 상자에 삽입
             self.tts_text.delete("1.0", tk.END)
             self.tts_text.insert("1.0", last_response)
-            self.generate_speech()
+            self.generate_speech()  # 음성 생성 호출
 
     def select_audio_file(self):
+        # 사용자가 음성 파일을 선택하도록 파일 탐색기 열기
         file_path = filedialog.askopenfilename(
             filetypes=[
-                ("Audio files", "*.mp3 *.mp4 *.mpeg *.mpga *.m4a *.wav *.webm")
+                ("Audio files", "*.mp3 *.mp4 *.mpeg *.mpga *.m4a *.wav *.webm")  # 지원 파일 형식
             ]
         )
 
-        if not file_path:
+        if not file_path:  # 파일을 선택하지 않은 경우 종료
             return
 
         try:
+            # 선택된 파일을 열어 STT API 호출
             with open(file_path, "rb") as audio_file:
-                language = self.lang_var.get()
-                if language == "auto":
+                language = self.lang_var.get()  # 언어 선택 값 가져오기
+                if language == "auto":  # 자동 언어 감지 설정
                     language = None
 
+                # 음성 파일을 텍스트로 변환
                 transcript = self.client.audio.transcriptions.create(
-                    model="whisper-1",
-                    file=audio_file,
-                    language=language
+                    model="whisper-1",  # 음성 인식 모델
+                    file=audio_file,  # 음성 파일
+                    language=language  # 선택한 언어
                 )
 
+                # 변환 결과를 UI의 텍스트 상자에 표시
                 self.stt_result.delete("1.0", tk.END)
                 self.stt_result.insert("1.0", transcript.text)
 
         except Exception as e:
+            # 예외 발생 시 오류 메시지 표시
             self.stt_result.delete("1.0", tk.END)
             self.stt_result.insert("1.0", f"❌ Error: {str(e)}")
 
 
 if __name__ == "__main__":
-    root = tk.Tk()
-    app = MultiAIApp(root)
-    root.mainloop()
+    # 프로그램 실행 진입점
+    root = tk.Tk()  # Tkinter의 메인 윈도우 생성
+    app = MultiAIApp(root)  # MultiAIApp 클래스의 인스턴스 생성
+    root.mainloop()  # Tkinter 이벤트 루프 시작
