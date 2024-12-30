@@ -64,7 +64,7 @@ class MultiAIApp:
             self.conversation_history.append({"role": "user", "content": message})
 
             response = self.client.chat.completions.create(
-                model="gpt-3.5-turbo",
+                model="gpt-4o-mini",
                 messages=self.conversation_history
             )
 
