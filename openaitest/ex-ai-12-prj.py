@@ -1,3 +1,71 @@
+'''
+1. 기본 구조 설정
+- [TODO] `__init__` 함수 구현
+  - 기본 창 설정
+  - 변수 초기화
+  - OpenAI 클라이언트 설정
+
+2. UI 기본 프레임워크
+- [TODO] `setup_ui` 함수 구현
+  - 메인 컨테이너 설정
+  - 노트북(탭) 생성
+
+3. 채팅 기능 구현 (핵심 기능)
+- [TODO] `setup_chat_tab` 함수 구현
+  - 채팅 UI 구성
+- [TODO] `send_message` 함수 구현
+  - 사용자 입력 처리
+- [TODO] `get_gpt_response` 함수 구현
+  - GPT API 연동
+- [TODO] `update_chat_area` 함수 구현
+  - 채팅 화면 업데이트
+
+4. 채팅 저장 기능
+- [TODO] `new_chat` 함수 구현
+  - 새 대화 시작
+- [TODO] `auto_save_chat` 함수 구현
+  - 자동 저장 로직
+- [TODO] `save_chat_to_file` 함수 구현
+  - 파일 저장 처리
+- [TODO] `save_to_docx` 함수 구현
+  - Word 문서 저장
+
+5. 이미지 생성 기능
+- [TODO] `setup_image_tab` 함수 구현
+  - 이미지 탭 UI 구성
+- [TODO] `generate_image` 함수 구현
+  - 이미지 생성 요청 처리
+- [TODO] `generate_image_thread` 함수 구현
+  - DALL-E API 연동
+- [TODO] `update_image` 함수 구현
+  - 생성된 이미지 표시
+
+6. 음성 변환 기능
+- [TODO] `setup_voice_tab` 함수 구현
+  - 음성 탭 UI 구성
+- [TODO] `generate_speech` 함수 구현
+  - TTS 기능 구현
+- [TODO] `speak_last_response` 함수 구현
+  - 마지막 응답 음성 변환
+- [TODO] `select_audio_file` 함수 구현
+  - STT 기능 구현
+
+7. 메인 실행
+- [TODO] `if __name__ == "__main__":` 부분 구현
+  - 애플리케이션 실행
+
+이 순서로 개발을 진행하면:
+1. 먼저 기본 프레임워크를 구축하고
+2. 핵심 기능인 채팅부터 구현한 후
+3. 부가 기능(저장, 이미지 생성, 음성 변환)을 순차적으로 추가할 수 있습니다
+
+각 단계에서 기능을 구현하고 테스트한 후 다음 단계로 진행하는 것이 안정적인 개발 방법이 될 것입니다.
+
+
+'''
+
+
+
 import tkinter as tk
 from tkinter import scrolledtext, ttk, filedialog
 from docx import Document
