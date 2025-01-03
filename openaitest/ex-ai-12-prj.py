@@ -115,6 +115,104 @@ class MultiAIApp:
         # UI 설정 메서드 호출
         self.setup_ui()
 
+    def setup_ui(self):
+        # UI 초기화 및 구성
+        main_container = ttk.Frame(self.root, padding="10")
+        main_container.pack(fill='both', expand=True)
+
+        # 노트북(탭) 생성
+        self.notebook = ttk.Notebook(main_container)
+        self.notebook.pack(fill='both', expand=True)
+
+        # 탭 설정
+        self.setup_chat_tab()  # 채팅 탭 구성
+        self.setup_image_tab()  # 이미지 생성 탭 구성
+        self.setup_voice_tab()  # 음성 변환 탭 구성
+
+
+    def setup_chat_tab(self):
+        # 채팅 탭 UI 구성
+        self.chat_frame = ttk.Frame(self.notebook, style='Chat.TFrame')
+        self.notebook.add(self.chat_frame, text=' 💬 채팅 ')
+
+        # 타이틀 프레임
+        title_frame = ttk.Frame(self.chat_frame)
+        title_frame.pack(fill='x', pady=(0, 10))
+        ttk.Label(title_frame, text="AI와의 대화", style='Title.TLabel').pack(side='left')
+
+        # 채팅 영역 (테두리와 패딩 추가)
+        chat_container = ttk.Frame(self.chat_frame, relief='solid', borderwidth=1)
+        chat_container.pack(fill='both', expand=True, pady=(0, 10))
+
+        self.chat_area = scrolledtext.ScrolledText(
+            chat_container,             # 채팅 컨테이너에 위젯 배치
+            wrap=tk.WORD,               # 단어 단위로 자동 줄바꿈
+            height=20,                  # 채팅창 높이 설정 (행 단위)
+            font=('Helvetica', 10),     # 폰트 설정: Helvetica, 크기 10
+            bg='#000000'                # 배경색 설정: 검정색
+        )
+        self.chat_area.pack(fill='both', expand=True, padx=5, pady=5)
+
+        # 입력 영역 컨테이너
+        input_container = ttk.Frame(self.chat_frame, style='Control.TFrame')
+        input_container.pack(fill='x', pady=(0, 5))
+
+        # 메시지 입력 프레임
+        input_frame = ttk.Frame(input_container)
+        input_frame.pack(fill='x', pady=5)
+
+        self.message_entry = ttk.Entry(
+            input_frame,  # 입력창을 input_frame에 배치
+            font=('Helvetica', 10)  # 폰트 설정: Helvetica, 크기 10
+        )
+        self.message_entry.pack(
+            side='left',  # 왼쪽 정렬
+            fill='x',  # x축 방향으로 공간 채우기
+            expand=True,  # 남는 공간을 채우도록 확장
+            padx=(0, 5)  # 좌우 패딩: 왼쪽 0, 오른쪽 5픽셀
+        )
+        self.message_entry.bind(
+            '<Return>',  # Enter 키 이벤트 바인딩
+            self.send_message  # Enter 키 누르면 send_message 함수 실행
+        )
+
+        ttk.Button(
+            input_frame,
+            text="전송",
+            style='Accent.TButton',
+            command=self.send_message
+        ).pack(side='right')
+
+        # 컨트롤 버튼 프레임
+        control_frame = ttk.Frame(input_container)
+        control_frame.pack(fill='x', pady=5)
+
+        ttk.Button(
+            control_frame,
+            text="💾 대화 내역 저장",
+            command=self.save_to_docx
+        ).pack(side='left', padx=2)
+
+        ttk.Button(
+            control_frame,
+            text="🔄 새 채팅",
+            command=self.new_chat
+        ).pack(side='left', padx=2)
+
+        ttk.Button(
+            control_frame,
+            text="🔊 음성으로 듣기",
+            command=self.speak_last_response
+        ).pack(side='left', padx=2)
+
+        # 상태 표시 레이블
+        self.loading_label = ttk.Label(
+            self.chat_frame,
+            text="",
+            style='Status.TLabel'
+        )
+        self.loading_label.pack(pady=5)
+
     def send_message(self, event=None):
         # 메시지 전송 메서드
         message = self.message_entry.get().strip()  # 입력 필드에서 메시지 가져오기
@@ -228,91 +326,6 @@ class MultiAIApp:
                                   f"❌ Error: 대화 내역 저장 중 오류가 발생했습니다. {str(e)}\n\n")
             self.chat_area.see(tk.END)
 
-    def setup_ui(self):
-        # UI 초기화 및 구성
-        main_container = ttk.Frame(self.root, padding="10")
-        main_container.pack(fill='both', expand=True)
-
-        # 노트북(탭) 생성
-        self.notebook = ttk.Notebook(main_container)
-        self.notebook.pack(fill='both', expand=True)
-
-        # 탭 설정
-        self.setup_chat_tab()  # 채팅 탭 구성
-        self.setup_image_tab()  # 이미지 생성 탭 구성
-        self.setup_voice_tab()  # 음성 변환 탭 구성
-
-    def setup_chat_tab(self):
-        # 채팅 탭 UI 구성
-        self.chat_frame = ttk.Frame(self.notebook, style='Chat.TFrame')
-        self.notebook.add(self.chat_frame, text=' 💬 채팅 ')
-
-        # 타이틀 프레임
-        title_frame = ttk.Frame(self.chat_frame)
-        title_frame.pack(fill='x', pady=(0, 10))
-        ttk.Label(title_frame, text="AI와의 대화", style='Title.TLabel').pack(side='left')
-
-        # 채팅 영역 (테두리와 패딩 추가)
-        chat_container = ttk.Frame(self.chat_frame, relief='solid', borderwidth=1)
-        chat_container.pack(fill='both', expand=True, pady=(0, 10))
-
-        self.chat_area = scrolledtext.ScrolledText(
-            chat_container,
-            wrap=tk.WORD,
-            height=20,
-            font=('Helvetica', 10),
-            bg='#000000'  # 밝은 배경색
-        )
-        self.chat_area.pack(fill='both', expand=True, padx=5, pady=5)
-
-        # 입력 영역 컨테이너
-        input_container = ttk.Frame(self.chat_frame, style='Control.TFrame')
-        input_container.pack(fill='x', pady=(0, 5))
-
-        # 메시지 입력 프레임
-        input_frame = ttk.Frame(input_container)
-        input_frame.pack(fill='x', pady=5)
-
-        self.message_entry = ttk.Entry(input_frame, font=('Helvetica', 10))
-        self.message_entry.pack(side='left', fill='x', expand=True, padx=(0, 5))
-        self.message_entry.bind('<Return>', self.send_message)
-
-        ttk.Button(
-            input_frame,
-            text="전송",
-            style='Accent.TButton',
-            command=self.send_message
-        ).pack(side='right')
-
-        # 컨트롤 버튼 프레임
-        control_frame = ttk.Frame(input_container)
-        control_frame.pack(fill='x', pady=5)
-
-        ttk.Button(
-            control_frame,
-            text="💾 대화 내역 저장",
-            command=self.save_to_docx
-        ).pack(side='left', padx=2)
-
-        ttk.Button(
-            control_frame,
-            text="🔄 새 채팅",
-            command=self.new_chat
-        ).pack(side='left', padx=2)
-
-        ttk.Button(
-            control_frame,
-            text="🔊 음성으로 듣기",
-            command=self.speak_last_response
-        ).pack(side='left', padx=2)
-
-        # 상태 표시 레이블
-        self.loading_label = ttk.Label(
-            self.chat_frame,
-            text="",
-            style='Status.TLabel'
-        )
-        self.loading_label.pack(pady=5)
 
     def setup_image_tab(self):
         # 이미지 생성 탭 UI 구성
