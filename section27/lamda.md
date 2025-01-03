@@ -51,6 +51,33 @@ students.sort(key=lambda student: student['grade'], reverse=True)
 print(students)  # 성적 순으로 정렬됨
 ```
 
+```
+# 1. map 비교
+# 일반 함수 사용
+def square(x):
+    return x ** 2
+
+squared_normal = list(map(square, numbers))
+print("일반 함수 map:", squared_normal)  # [1, 4, 9, 16, 25]
+
+# 람다 함수 사용
+squared_lambda = list(map(lambda x: x ** 2, numbers))
+print("람다 함수 map:", squared_lambda)  # [1, 4, 9, 16, 25]
+
+
+# 2. filter 비교
+# 일반 함수 사용
+def is_even(x):
+    return x % 2 == 0
+
+evens_normal = list(filter(is_even, numbers))
+print("일반 함수 filter:", evens_normal)  # [2, 4]
+
+# 람다 함수 사용
+evens_lambda = list(filter(lambda x: x % 2 == 0, numbers))
+print("람다 함수 filter:", evens_lambda)  # [2, 4]
+```
+
 ## 4. 람다 함수의 장단점
 
 ### 장점
