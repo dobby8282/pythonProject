@@ -179,14 +179,20 @@ class SQLLogParser(QMainWindow):
             return f"'{value}'"
 
     def parse_log_and_combine_query(self, log_text):
+        # ANSI 컬러 코드 제거
+        log_text = re.sub(r'\x1B\[[0-9;]*[mK]', '', log_text)
+
         # 쿼리 추출
-        query_match = re.search(r'calling prepareStatement\((.*?)\)\.\.\.', log_text, re.DOTALL)
-        params_match = re.search(r'Parameters: (.*?)(?:\n|$)', log_text, re.DOTALL)
+        query_match = re.search(r'(?:Preparing: |==>  Preparing: )(.*?)(?=\d{4}-\d{2}-\d{2}|Parameters:|==>|$)',
+                                log_text, re.DOTALL)
+        params_match = re.search(r'Parameters: (.*?)(?=\d{4}-\d{2}-\d{2}|\n|$)', log_text, re.DOTALL)
 
         if not query_match:
             # 직접 SQL 쿼리가 입력된 경우를 처리
-            if 'SELECT' in log_text.upper():
-                query = log_text.strip()
+            if any(keyword in log_text.upper() for keyword in ['SELECT', 'INSERT', 'UPDATE', 'DELETE', 'MERGE']):
+                # 날짜 형식이 있다면 그 전까지만 추출
+                direct_query_match = re.search(r'(.*?)(?=\d{4}-\d{2}-\d{2}|$)', log_text, re.DOTALL)
+                query = direct_query_match.group(1).strip() if direct_query_match else log_text.strip()
             else:
                 raise ValueError("로그 형식이 올바르지 않습니다.")
         else:
@@ -203,9 +209,36 @@ class SQLLogParser(QMainWindow):
                     for param in processed_params:
                         query = query.replace('?', param, 1)
 
-        # 쿼리 포매팅
-        formatted_query = self.format_sql_query(query)
-        return formatted_query
+        return self.format_sql_query(query)
+
+    # def parse_log_and_combine_query(self, log_text):
+    #     # 쿼리 추출
+    #     query_match = re.search(r'calling prepareStatement\((.*?)\)\.\.\.', log_text, re.DOTALL)
+    #     params_match = re.search(r'Parameters: (.*?)(?:\n|$)', log_text, re.DOTALL)
+    #
+    #     if not query_match:
+    #         # 직접 SQL 쿼리가 입력된 경우를 처리
+    #         if 'SELECT' in log_text.upper():
+    #             query = log_text.strip()
+    #         else:
+    #             raise ValueError("로그 형식이 올바르지 않습니다.")
+    #     else:
+    #         query = query_match.group(1).strip()
+    #
+    #         # 파라미터가 있는 경우 처리
+    #         if params_match:
+    #             params_text = params_match.group(1).strip()
+    #             if params_text:
+    #                 params = self.parse_parameters(params_text)
+    #                 processed_params = [self.process_parameter(param) for param in params]
+    #
+    #                 # 파라미터 값을 쿼리의 ? 위치에 대체
+    #                 for param in processed_params:
+    #                     query = query.replace('?', param, 1)
+    #
+    #     # 쿼리 포매팅
+    #     formatted_query = self.format_sql_query(query)
+    #     return formatted_query
 
     def format_sql_query(self, query):
         # 기본 전처리
