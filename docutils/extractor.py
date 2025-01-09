@@ -6,21 +6,6 @@ import re
 import time
 import threading
 
-import os
-import sys
-
-def resource_path(relative_path):
-    """ Get absolute path to resource, works for dev and for PyInstaller """
-    try:
-        # PyInstaller creates a temp folder and stores path in _MEIPASS
-        base_path = sys._MEIPASS
-    except Exception:
-        base_path = os.path.abspath(".")
-
-    return os.path.join(base_path, relative_path)
-
-# sv_ttk 관련 리소스 경로 설정
-os.environ['SV_TTK_PATH'] = resource_path('sv_ttk')
 
 class SQLExtractorApp:
     def __init__(self, root):
@@ -88,8 +73,8 @@ class SQLExtractorApp:
         self.param_tab = scrolledtext.ScrolledText(self.notebook, wrap=tk.WORD)
         self.executable_tab = scrolledtext.ScrolledText(self.notebook, wrap=tk.WORD)
 
-        self.notebook.add(self.executable_tab, text="Executable SQL")
         self.notebook.add(self.param_tab, text="With Parameters")
+        self.notebook.add(self.executable_tab, text="Executable SQL")
 
     def start_extraction(self):
         # Disable the extract button and show progress
