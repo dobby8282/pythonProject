@@ -1,54 +1,38 @@
-import platform
-import matplotlib.pyplot as plt
-from matplotlib import rc
-import win32com.client as win32
-import os
+import win32com.client
 
-# (1) 한글 폰트 설정 및 그래프 생성
-if platform.system() == 'Windows':
-    font_name = 'Malgun Gothic'
-    rc('font', family=font_name)
+# 한글 오토메이션 객체 생성
+hwp = win32com.client.Dispatch("HWPFrame.HwpObject.1")
 
-plt.rcParams['axes.unicode_minus'] = False
+# 새 문서 생성
+hwp.XHwpDocuments.Add(True)
 
-x = [1, 2, 3, 4, 5]
-y = [10, 15, 13, 17, 20]
+# 표 생성 설정
+hwp.HAction.GetDefault("TableCreate", hwp.HParameterSet.HTableCreation.HSet)
+hwp.HParameterSet.HTableCreation.Rows = 3  # 행 개수
+hwp.HParameterSet.HTableCreation.Cols = 4  # 열 개수
+hwp.HParameterSet.HTableCreation.WidthValue = 150  # 표 너비
+hwp.HParameterSet.HTableCreation.HeightValue = 30  # 표 높이
 
-plt.plot(x, y, marker='o', linestyle='-', color='blue')
-plt.title('샘플 데이터 그래프', fontsize=14)
-plt.xlabel('X축 (개)', fontsize=12)
-plt.ylabel('Y축 (값)', fontsize=12)
-plt.grid(True)
+# 표 생성 실행
+hwp.HAction.Execute("TableCreate", hwp.HParameterSet.HTableCreation.HSet)
 
-chart_filename = os.path.join(os.getcwd(), 'chart.png')
-plt.savefig(chart_filename, dpi=150, bbox_inches='tight')
-plt.close()
+# 표 내용 입력
+cell_data = [
+    ["헤더1", "헤더2", "헤더3", "헤더4"],
+    ["데이터1", "데이터2", "데이터3", "데이터4"],
+    ["데이터5", "데이터6", "데이터7", "데이터8"]
+]
 
-# (2) 한글 OLE 객체 연결
-hwp = win32.gencache.EnsureDispatch("HWPFrame.HwpObject")
-hwp.XHwpWindows.Item(0).Visible = True
+# 각 셀에 데이터 삽입
+for row_idx, row in enumerate(cell_data):
+    for col_idx, text in enumerate(row):
+        hwp.HAction.Run("TableLowerCell")  # 현재 셀로 이동
+        hwp.HAction.GetDefault("InsertText", hwp.HParameterSet.HInsertText.HSet)
+        hwp.HParameterSet.HInsertText.Text = text  # 텍스트 설정
+        hwp.HAction.Execute("InsertText", hwp.HParameterSet.HInsertText.HSet)
 
-# (3) 새 문서 생성
-hwp.Run("FileNew")
+# 문서 저장
+hwp.XHwpDocuments.Item(0).SaveAs("C:\\Users\\taeho\\Desktop\\TableExample.hwp", "HWP", "")
 
-# (4) 텍스트 삽입
-hwp.HAction.GetDefault("InsertText", hwp.HParameterSet.HInsertText.HSet)
-hwp.HParameterSet.HInsertText.Text = "이 문서는 파이썬을 통해 자동으로 생성된 한글 문서입니다.\n아래는 파이썬으로 만든 그래프 이미지입니다.\n\n"
-hwp.HAction.Execute("InsertText", hwp.HParameterSet.HInsertText.HSet)
-
-# (5) 그림 삽입
-set = hwp.HParameterSet # 파라미터 세트 가져오기
-act = hwp.HAction      # 액션 가져오기
-
-act.GetDefault("InsertPicture", set.HInsertPicture.HSet)    # 그림 삽입 액션의 파라미터를 기본값으로 설정
-set.HInsertPicture.FileName = chart_filename    # 삽입할 그림 파일의 경로를 지정
-set.HInsertPicture.Width = 100      # 그림의 너비를 100mm로 설정
-set.HInsertPicture.Height = 80      # 그림의 높이를 80mm로 설정
-act.Execute("InsertPicture", set.HInsertPicture.HSet)  # 설정한 파라미터로 그림 삽입 액션 실행
-
-# (6) 문서 저장
-save_path = os.path.join(os.getcwd(), "자동_생성_문서.hwp")
-hwp.SaveAs(save_path)
-
-# (7) 한글 종료
+# 한글 종료
 hwp.Quit()

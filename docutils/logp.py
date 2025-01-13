@@ -227,6 +227,8 @@ class SQLExtractorApp:
                 replacement = "NULL"
             # Handle string values
             elif is_string:
+                # 문자열에서 ' -- ' 제거
+                param = param.replace(' -- ', '')
                 replacement = f"'{param}'"
             # Handle numeric values
             else:
