@@ -1,6 +1,14 @@
 import sys
-from PyQt6.QtWidgets import (QApplication, QMainWindow, QWidget, QVBoxLayout,
-                             QHBoxLayout, QPushButton, QLineEdit)
+from PyQt6.QtWidgets import (
+    QApplication,
+    QMainWindow,
+    QWidget,
+    QVBoxLayout,
+    QHBoxLayout,
+    QPushButton,
+    QLineEdit,
+    QFileDialog
+)
 from PyQt6.QtWebEngineWidgets import QWebEngineView
 from PyQt6.QtWebEngineCore import QWebEnginePage, QWebEngineProfile
 from PyQt6.QtCore import QUrl, QLocale
@@ -11,6 +19,7 @@ class WebEnginePage(QWebEnginePage):
         super().__init__(profile, parent)
 
     def createWindow(self, _type):
+        # 팝업 창 생성
         new_window = PopupWindow(self.profile(), self.parent())
         new_window.show()
         return new_window.web_view.page()
@@ -26,9 +35,31 @@ class PopupWindow(QMainWindow):
         self.setCentralWidget(central_widget)
         layout = QVBoxLayout(central_widget)
 
+        # 팝업 창에도 URL 바
+        nav_layout = QHBoxLayout()
+        self.url_bar = QLineEdit()
+        # 팝업창은 직접 주소창을 입력해서 이동하는 기능을 예제로 넣어도 되고,
+        # 단순히 보기만 원하시면 returnPressed 연결은 제외하셔도 됩니다.
+        self.url_bar.returnPressed.connect(self.navigate_to_url)
+        nav_layout.addWidget(self.url_bar)
+        layout.addLayout(nav_layout)
+
         self.web_view = QWebEngineView()
         self.web_view.setPage(WebEnginePage(profile, self.web_view))
+
+        # 팝업창의 URL이 바뀔 때마다 주소창도 갱신
+        self.web_view.urlChanged.connect(self.update_url_bar)
+
         layout.addWidget(self.web_view)
+
+    def update_url_bar(self, url):
+        self.url_bar.setText(url.toString())
+
+    def navigate_to_url(self):
+        url = self.url_bar.text()
+        if not url.startswith(('http://', 'https://')):
+            url = 'https://' + url
+        self.web_view.setUrl(QUrl(url))
 
 
 class WebBrowser(QMainWindow):
@@ -48,6 +79,9 @@ class WebBrowser(QMainWindow):
 
         # 언어 설정
         self.profile.setHttpAcceptLanguage(locale.name().replace('_', '-'))
+
+        # 파일 다운로드 시그널 연결
+        self.profile.downloadRequested.connect(self.handle_download_requested)
 
         # 중앙 위젯 생성
         central_widget = QWidget()
@@ -117,6 +151,17 @@ class WebBrowser(QMainWindow):
 
         # 네비게이션 상태 변경 시그널 연결
         self.web_view.loadFinished.connect(self.update_navigation_buttons)
+
+    def handle_download_requested(self, download):
+        """
+        다운로드 요청이 발생하면 저장 위치를 묻고 파일을 저장합니다.
+        """
+        suggested_filename = download.downloadFileName()
+        # 파일 저장 대화상자
+        save_path, _ = QFileDialog.getSaveFileName(self, "파일 저장", suggested_filename)
+        if save_path:
+            download.setPath(save_path)
+            download.accept()
 
     def go_home(self):
         self.web_view.setUrl(QUrl(self.home_url))
