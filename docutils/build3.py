@@ -1,4 +1,4 @@
-# build.py
+# build3.py
 import PyInstaller.__main__
 import os
 import shutil
